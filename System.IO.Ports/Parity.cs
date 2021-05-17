@@ -1,0 +1,23 @@
+﻿namespace System.IO.Ports
+{
+    /// <summary>
+    /// Specifies the parity bit for a System.IO.Ports.SerialPort object.
+    /// </summary>
+    public enum Parity
+    {
+        /// <summary>
+        /// No parity check occurs.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Sets the parity bit so that the count of bits set is an odd number.
+        /// </summary>
+        Odd = 1,
+
+        /// <summary>
+        /// Sets the parity bit so that the count of bits set is an even number.
+        /// </summary>
+        Even = 2,
+    };
+}

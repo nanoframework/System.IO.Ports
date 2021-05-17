@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31229.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{11A8DD76-328B-46DF-9F39-F559912D0360}") = "System.IO.Ports", "System.IO.Ports\System.IO.Ports.nfproj", "{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81AEA0D7-86C3-45D6-94C7-3E704825AB20}"
+	ProjectSection(SolutionItems) = preProject
+		nanoFramework.System.IO.Ports.DELIVERABLES.nuspec = nanoFramework.System.IO.Ports.DELIVERABLES.nuspec
+		nanoFramework.System.IO.Ports.nuspec = nanoFramework.System.IO.Ports.nuspec
+		NuGet.Config = NuGet.Config
+		version.json = version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{27506A0F-56CF-4294-B275-AEA242814946}"
+EndProject
+Project("{11A8DD76-328B-46DF-9F39-F559912D0360}") = "UnitTestsSerialPort", "Tests\UnitTestsSerialPort\UnitTestsSerialPort.nfproj", "{A663BBAA-9B46-42FF-9B5E-727B217C124E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D7253CC-A767-4D5D-9CFF-74282D75C1FA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A663BBAA-9B46-42FF-9B5E-727B217C124E} = {27506A0F-56CF-4294-B275-AEA242814946}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {19C20DC5-8946-4BBE-AF3B-B0D857DD159B}
+	EndGlobalSection
+EndGlobal
