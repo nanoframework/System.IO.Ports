@@ -223,7 +223,7 @@ namespace UnitTestsSerialPort
             Thread.Sleep(100);
             var numBytes = _serTwo.BytesToRead;
             // Clean
-            _serTwo.ReadExisting();
+            EnsurePortEmpty(_serTwo);
             // Assert
             Assert.Equal(lotsOfBytes.Length, numBytes);
         }
@@ -303,7 +303,7 @@ namespace UnitTestsSerialPort
             _serTwo.WriteTimeout = 1000;
             _serTwo.ReadTimeout = 1000;
             EnsurePortEmpty(_serOne);
-            EnsurePortEmpty(_serTwo);
+            EnsurePortEmpty(_serTwo); 
             _serTwo.DataReceived += DataReceivedNormalEventTest;
             byte[] toSend = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
             // Act
