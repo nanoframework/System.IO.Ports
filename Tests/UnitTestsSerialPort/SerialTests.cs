@@ -106,10 +106,34 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
+        public void ReadMultipleLinesTests()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            string toSend = $"Hi, this is a simple test with string{_serOne.NewLine}And with a second line{_serOne.NewLine}Only line by line should be read{_serOne.NewLine}";
+            string toReceive = string.Empty;
+            // Act
+            _serOne.WriteLine(toSend);
+            toReceive = _serTwo.ReadLine();
+            // Assert
+            Assert.Equal($"Hi, this is a simple test with string{_serOne.NewLine}", toReceive);
+            toReceive = _serTwo.ReadLine();
+            Assert.Equal($"And with a second line{_serOne.NewLine}", toReceive);
+            toReceive = _serTwo.ReadLine();
+            Assert.Equal($"Only line by line should be read{_serOne.NewLine}", toReceive);
+        }
+
+        [TestMethod]
         public void CheckReadByteSize()
         {
             // Arrange
             EnsurePortsOpen();
+            EnsurePortEmpty(_serTwo);
+
             string toSend = $"I ❤ nanoFramework{_serOne.NewLine}";
             int enc = _serOne.Encoding.GetBytes(toSend).Length;
             // Act

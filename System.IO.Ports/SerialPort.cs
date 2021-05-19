@@ -1,8 +1,7 @@
 ﻿
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Collections;
 
 namespace System.IO.Ports
 {
@@ -633,18 +632,31 @@ namespace System.IO.Ports
             }
 
             string retReadLine = string.Empty;
-            string tmpRetLine;
+            byte[] singleByte = new byte[1];
             bool isNewLine = false;
+            ArrayList lineText = new ArrayList();
+            byte[] newLineByteArray = Encoding.GetBytes(_newLine);
+
             DateTime dtTimeout = DateTime.UtcNow.AddMilliseconds(_readTimeout);
             do
             {
-                tmpRetLine = ReadExisting();
-                if (!string.IsNullOrEmpty(tmpRetLine))
+                if (BytesToRead > 0)
                 {
-                    retReadLine += tmpRetLine;
-                    if (retReadLine.LastIndexOf(_newLine) == retReadLine.Length - _newLine.Length)
+                    // Read byte by byte
+                    NativeRead(singleByte, 0, 1);
+                    lineText.Add(singleByte[0]);
+
+                    if (lineText.Count >= newLineByteArray.Length)
                     {
                         isNewLine = true;
+                        for (int i = 0; i < newLineByteArray.Length; i++)
+                        {
+                            if((byte)lineText[lineText.Count - newLineByteArray.Length + i] != newLineByteArray[i])
+                            {
+                                isNewLine = false;
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -655,6 +667,13 @@ namespace System.IO.Ports
             }
             while (!isNewLine);
 
+            byte[] lineTextBytes = new byte[lineText.Count];
+            for(int i =0; i<lineText.Count; i++)
+            {
+                lineTextBytes[i] = (byte)lineText[i];
+            }
+
+            retReadLine = Encoding.GetString(lineTextBytes, 0, lineTextBytes.Length);
             return retReadLine;
         }
 
