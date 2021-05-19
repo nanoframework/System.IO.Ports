@@ -60,6 +60,7 @@
     <Compile Include="SerialSeviceController.cs" />
     <Compile Include="SerialStream.cs" />
     <Compile Include="StopBits.cs" />
+    <Compile Include="TimeoutException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib, Version=1.10.4.0, Culture=neutral, PublicKeyToken=c07d481e9758c731">

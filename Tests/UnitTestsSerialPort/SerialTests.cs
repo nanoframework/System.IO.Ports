@@ -1,7 +1,8 @@
-using nanoFramework.Hardware.Esp32;
+﻿using nanoFramework.Hardware.Esp32;
 using nanoFramework.TestFramework;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Ports;
 using System.Threading;
 
@@ -19,10 +20,10 @@ namespace UnitTestsSerialPort
             try
             {
                 Debug.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
-                Configuration.SetPinFunction(34, DeviceFunction.COM2_RX);
-                Configuration.SetPinFunction(35, DeviceFunction.COM2_TX);
-                Configuration.SetPinFunction(32, DeviceFunction.COM2_RTS);
-                Configuration.SetPinFunction(33, DeviceFunction.COM2_CTS);
+                Configuration.SetPinFunction(32, DeviceFunction.COM2_RX);
+                Configuration.SetPinFunction(33, DeviceFunction.COM2_TX);
+                Configuration.SetPinFunction(12, DeviceFunction.COM2_RTS);
+                Configuration.SetPinFunction(13, DeviceFunction.COM2_CTS);
 
                 Configuration.SetPinFunction(16, DeviceFunction.COM3_RX);
                 Configuration.SetPinFunction(17, DeviceFunction.COM3_TX);
@@ -38,6 +39,7 @@ namespace UnitTestsSerialPort
                 _serTwo = new SerialPort("COM3");
                 Debug.WriteLine("Devices created, trying to open them");
                 _serOne.Open();
+                Debug.WriteLine("Serial One COM2 opened");
                 _serTwo.Open();
                 Debug.WriteLine("Devices opened, will close them");
                 // Wait a bit just to make sure and close them again
@@ -52,8 +54,335 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestMethod1()
+        public void GetPortNamesTest()
         {
+            var ports = SerialPort.GetPortNames();
+            Debug.WriteLine("Available ports:");
+            foreach (string port in ports)
+            {
+                Debug.WriteLine($"  {port}");
+            }
+        }
+
+        [TestMethod]
+        public void BasicReadWriteTests()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            byte[] toSend = new byte[] { 0x42, 0xAA, 0x11, 0x00 };
+            byte[] toReceive = new byte[toSend.Length];
+            // Act
+            _serOne.Write(toSend, 0, toSend.Length);
+            // Give some time for the first com to send the data
+            Thread.Sleep(100);
+            _serTwo.Read(toReceive, 0, toReceive.Length);
+            // Assert
+            for (int i = 0; i < toSend.Length; i++)
+            {
+                Assert.Equal(toSend[i], toReceive[i]);
+            }
+        }
+
+        [TestMethod]
+        public void WriteAndReadStringTests()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            string toSend = "Hi, this is a simple test with string";
+            string toReceive = string.Empty;
+            // Act
+            _serOne.WriteLine(toSend);
+            toReceive = _serTwo.ReadLine();
+            // Assert
+            Assert.Equal(toSend + _serOne.NewLine, toReceive);
+        }
+
+        [TestMethod]
+        public void CheckReadByteSize()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            string toSend = $"I ❤ nanoFramework{_serOne.NewLine}";
+            int enc = _serOne.Encoding.GetBytes(toSend).Length;
+            // Act
+            _serOne.Write(toSend);
+            // Wait a bit to have data sent
+            Thread.Sleep(100);
+            // Assert
+            Assert.Equal(enc, _serTwo.BytesToRead);
+            // Read remaining
+            string sent = _serTwo.ReadExisting();
+            Assert.Equal(toSend, sent);
+        }
+
+        [TestMethod]
+        public void CheckReadLineWithoutAnything()
+        {
+            long dtOrigine = DateTime.UtcNow.Ticks;
+            Assert.Throws(typeof(TimeoutException), () =>
+            {
+                // Arrange
+                EnsurePortsOpen();
+                _serTwo.ReadTimeout = 2000;
+                EnsurePortEmpty(_serTwo);
+
+                // Act            
+                var nothingToRead = _serTwo.ReadLine();
+                // Assert
+            });
+            long dtTimeout = DateTime.UtcNow.Ticks;
+            Assert.True(dtTimeout >= dtOrigine + _serTwo.ReadTimeout * TimeSpan.TicksPerMillisecond);
+        }
+
+        [TestMethod]
+        public void CheckReadTimeoutTest()
+        {
+            Assert.Throws(typeof(TimeoutException), () =>
+            {
+                // Arrange
+                EnsurePortsOpen();
+                _serTwo.ReadTimeout = 1000;
+                // Ensure nothing to read, if yes, read all
+                EnsurePortEmpty(_serTwo);
+
+                byte[] toReadTimeout = new byte[5];
+                _serTwo.Read(toReadTimeout, 0, toReadTimeout.Length);
+            });
+        }
+
+        [TestMethod]
+        public void ReadByteWriteByteTests()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            EnsurePortEmpty(_serOne);
+            EnsurePortEmpty(_serTwo);
+
+            byte[] toWrite = new byte[] { 0, 42, 0 };
+            byte toRead;
+            // Act
+            _serOne.Write(toWrite, 1, 1);
+            // Wait to make sure it will be send
+            Thread.Sleep(100);
+            toRead = (byte)_serTwo.ReadByte();
+            // Assert
+            Assert.Equal(toWrite[1], toRead);
+        }
+
+        [TestMethod]
+        public void CheckBytesAvailableTest()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            EnsurePortEmpty(_serOne);
+            EnsurePortEmpty(_serTwo);
+            byte[] lotsOfBytes = new byte[42];
+            // Act
+            _serOne.Write(lotsOfBytes, 0, lotsOfBytes.Length);
+            // Wait to make sure it will be send
+            Thread.Sleep(100);
+            var numBytes = _serTwo.BytesToRead;
+            // Clean
+            _serTwo.ReadExisting();
+            // Assert
+            Assert.Equal(lotsOfBytes.Length, numBytes);
+        }
+
+        [TestMethod]
+        public void TryReadWriteWhileClosed()
+        {
+            EnsurePortsClosed();
+            Assert.Throws(typeof(InvalidOperationException), () =>
+            {
+                _serOne.Write("Something");
+            });
+
+            Assert.Throws(typeof(InvalidOperationException), () =>
+            {
+                byte[] something = new byte[5];
+                _serOne.Read(something, 0, something.Length);
+            });
+        }
+
+        [TestMethod]
+        public void AdjustBaudRateTests()
+        {
+            // Arrange
+            _serOne.BaudRate = 115200;
+            _serTwo.BaudRate = 115200;
+            // Act and Assert
+            SendAndReceiveBasic();
+        }
+
+        [TestMethod]
+        public void AdjustHandshakeTests()
+        {
+            // Arrange
+            _serOne.Handshake = Handshake.RequestToSend;
+            _serTwo.Handshake = Handshake.RequestToSend;
+            // Act and Assert
+            SendAndReceiveBasic();
+
+            _serOne.Handshake = Handshake.None;
+            _serTwo.Handshake = Handshake.None;
+        }
+
+        [TestMethod]
+        public void TestStreams()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            EnsurePortEmpty(_serOne);
+            EnsurePortEmpty(_serTwo);
+            Stream serOneStream = _serOne.BaseStream;
+            Stream serTwoStream = _serTwo.BaseStream;
+            byte[] toSend = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+            byte[] toReceive = new byte[toSend.Length];
+            // Act
+            serOneStream.Write(toSend, 0, toSend.Length);
+            Thread.Sleep(100);
+            serTwoStream.Read(toReceive, 0, toReceive.Length);
+            // Assert
+            for (int i = 0; i < toSend.Length; i++)
+            {
+                Assert.Equal(toSend[i], toReceive[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestEvents()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            EnsurePortEmpty(_serOne);
+            EnsurePortEmpty(_serTwo);
+            _serTwo.DataReceived += DataReceivedNormalEventTest;
+            byte[] toSend = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+            // Act
+            _serOne.Write(toSend, 0, toSend.Length);
+            // Wait for the data to be received
+            Thread.Sleep(200);
+            _serTwo.DataReceived -= DataReceivedNormalEventTest;
+        }
+
+        private void DataReceivedNormalEventTest(object sender, SerialDataReceivedEventArgs e)
+        {
+            var ser = (SerialPort)sender;
+            Debug.WriteLine($"Event fired, number of bytes ready to read: {ser.BytesToRead}");
+            Assert.Equal(8, ser.BytesToRead);
+            Assert.True(e.EventType == SerialData.Chars);
+        }
+
+        [TestMethod]
+        public void TestWatchCharEvents()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            EnsurePortEmpty(_serOne);
+            EnsurePortEmpty(_serTwo);
+            _serTwo.DataReceived += DataReceivedWatchChar;
+            _serTwo.WatchChar = '\r';
+            string toSendWithWatchChar = "This is a test\r";
+            // Act
+            _serOne.Write(toSendWithWatchChar);
+            Thread.Sleep(200);
+            _serTwo.DataReceived -= DataReceivedWatchChar;
+        }
+
+        private void DataReceivedWatchChar(object sender, SerialDataReceivedEventArgs e)
+        {
+            var ser = (SerialPort)sender;
+            Debug.WriteLine($"Event fired, number of bytes ready to read: {ser.BytesToRead}");
+            Assert.True(e.EventType == SerialData.WatchChar);
+        }
+
+        private void SendAndReceiveBasic()
+        {
+            EnsurePortsOpen();
+            EnsurePortEmpty(_serTwo);
+            byte[] toSend = new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+            byte[] toReceive = new byte[toSend.Length];
+            // Act
+            _serOne.Write(toSend, 0, toSend.Length);
+            // Wait to make sure it will be send
+            Thread.Sleep(100);
+            _serTwo.Read(toReceive, 0, toReceive.Length);
+            // Assert
+            for (int i = 0; i < toSend.Length; i++)
+            {
+                Assert.Equal(toSend[i], toReceive[i]);
+            }
+        }
+
+        [Cleanup]
+        public void CleanPorts()
+        {
+            EnsurePortsClosed();
+            _serOne.Dispose();
+            _serTwo.Dispose();
+        }
+
+        private void EnsurePortsClosed()
+        {
+            if (_serOne.IsOpen)
+            {
+                _serOne.Close();
+            }
+
+            if (_serTwo.IsOpen)
+            {
+                _serTwo.Close();
+            }
+        }
+
+        private void EnsurePortEmpty(SerialPort port)
+        {
+            // Ensure nothing to read, if yes, read all
+            while (port.BytesToRead > 0)
+            {
+                port.ReadByte();
+            }
+        }
+
+        private void EnsurePortsOpen()
+        {
+            if (!_serOne.IsOpen)
+            {
+                _serOne.Open();
+            }
+
+            if (!_serTwo.IsOpen)
+            {
+                _serTwo.Open();
+            }
         }
     }
 }

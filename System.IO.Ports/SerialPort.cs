@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -40,6 +41,7 @@ namespace System.IO.Ports
         private SerialStream _stream;
         private object _syncLock;
         private string _newLine;
+        private bool _hasBeenOpened = false;
 
         /// <summary>
         /// Initializes a new instance of the System.IO.Ports.SerialPort class using the
@@ -65,7 +67,7 @@ namespace System.IO.Ports
                 _baudRate = baudRate;
                 _parity = parity;
                 _dataBits = dataBits;
-                _stopBits = stopBits;                
+                _stopBits = stopBits;
             }
             else
             {
@@ -74,7 +76,6 @@ namespace System.IO.Ports
             }
 
             _newLine = DefaultNewLine;
-            _syncLock = new object();
         }
 
         /// <summary>
@@ -87,7 +88,13 @@ namespace System.IO.Ports
             if (!_opened)
             {
                 _disposed = false;
-                NativeInit();
+                // Initi should happen only once
+                if (!_hasBeenOpened)
+                {
+                    NativeInit();
+                }
+
+                _hasBeenOpened = true;
 
                 // add the serial device to the event listener in order to receive the callbacks from the native interrupts
                 s_eventListener.AddSerialDevice(this);
@@ -178,9 +185,11 @@ namespace System.IO.Ports
         /// <exception cref="ArgumentOutOfRangeException">The value passed is not a valid value in the System.IO.Ports.Handshake enumeration.</exception>
         public Handshake Handshake
         {
-            get => _handshake; set
+            get => _handshake;
+            set
             {
                 _handshake = value;
+                NativeConfig();
             }
         }
 
@@ -198,7 +207,6 @@ namespace System.IO.Ports
         public int DataBits
         {
             get => _dataBits;
-
             set
             {
                 if ((value < 5) || (value > 8))
@@ -287,9 +295,20 @@ namespace System.IO.Ports
                     throw new ArgumentException();
                 }
 
-                _deviceId = value;
-                NativeInit();
-                _disposed = false;
+                if (_deviceId != value)
+                {
+                    // First dispose the old one
+                    if (_hasBeenOpened)
+                    {
+                        NativeDispose();
+                    }
+
+                    _deviceId = value;
+                    _portIndex = (value[3] - 48);
+                    NativeInit();
+                    _hasBeenOpened = true;
+                    _disposed = false;
+                }
             }
         }
 
@@ -531,6 +550,11 @@ namespace System.IO.Ports
         /// <exception cref="System.TimeoutException">No bytes were available to read.</exception>
         public int Read(byte[] buffer, int offset, int count)
         {
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (buffer == null)
             {
                 throw new ArgumentNullException();
@@ -541,7 +565,7 @@ namespace System.IO.Ports
                 throw new InvalidOperationException();
             }
 
-            if (offset + count >= buffer.Length)
+            if (offset + count > buffer.Length)
             {
                 throw new ArgumentException();
             }
@@ -558,6 +582,11 @@ namespace System.IO.Ports
         /// was read.</exception>
         public int ReadByte()
         {
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
+
             byte[] toRead = new byte[1];
             NativeRead(toRead, 0, 1);
             return toRead[0];
@@ -572,6 +601,16 @@ namespace System.IO.Ports
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         public string ReadExisting()
         {
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (BytesToRead == 0)
+            {
+                return string.Empty;
+            }
+
             byte[] toRead = new byte[BytesToRead];
             var ret = NativeRead(toRead, 0, toRead.Length);
             // normally ret == toRead.Length
@@ -588,44 +627,34 @@ namespace System.IO.Ports
         /// were read.</exception>
         public string ReadLine()
         {
-            char oldWatcher = _watchChar;
-            _watchChar = _newLine[0];
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
 
             string retReadLine = string.Empty;
+            string tmpRetLine;
             bool isNewLine = false;
+            DateTime dtTimeout = DateTime.UtcNow.AddMilliseconds(_readTimeout);
             do
             {
-                retReadLine += ReadExisting();
-                if (retReadLine.LastIndexOf(_watchChar) == retReadLine.Length - 1)
+                tmpRetLine = ReadExisting();
+                if (!string.IsNullOrEmpty(tmpRetLine))
                 {
-                    if (_newLine.Length == 1)
+                    retReadLine += tmpRetLine;
+                    if (retReadLine.LastIndexOf(_newLine) == retReadLine.Length - _newLine.Length)
                     {
                         isNewLine = true;
                     }
-                    else
-                    {
-                        // Read the next characters and check they are the one expected
-                        var strToCheck = _newLine.Substring(1);
-                        var expectedNexBytes = Encoding.GetBytes(strToCheck);
-                        byte[] expectedToRead = new byte[expectedNexBytes.Length];
-                        var ret = NativeRead(expectedToRead, 0, expectedToRead.Length);
-                        if(ret == expectedToRead.Length)
-                        {
-                            bool isFound = true;
-                            for(int i=0; i<expectedToRead.Length;i++)
-                            {
-                                isFound = isFound && (expectedToRead[i] == expectedNexBytes[i]);
-                            }
+                }
 
-                            isNewLine = isFound;
-                        }                        
-                    }
+                if ((DateTime.UtcNow >= dtTimeout) && (_readTimeout != InfiniteTimeout))
+                {
+                    throw new TimeoutException();
                 }
             }
             while (!isNewLine);
 
-            _watchChar = oldWatcher;
-            NativeSetWatchChar();
             return retReadLine;
         }
 
@@ -641,9 +670,14 @@ namespace System.IO.Ports
         /// <exception cref="ArgumentOutOfRangeException">The offset or count parameters are outside a valid region of the buffer being
         /// passed. Either offset or count is less than zero.</exception>
         /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
-        /// <exception cref="System.ServiceProcess.TimeoutException">The operation did not complete before the time-out period ended.</exception>
+        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
         public void Write(byte[] buffer, int offset, int count)
         {
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (buffer == null)
             {
                 throw new ArgumentNullException();
@@ -654,7 +688,7 @@ namespace System.IO.Ports
                 throw new InvalidOperationException();
             }
 
-            if (offset + count >= buffer.Length)
+            if (offset + count > buffer.Length)
             {
                 throw new ArgumentException();
             }
@@ -669,9 +703,14 @@ namespace System.IO.Ports
         /// <param name="text">The string for output.</param>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         /// <exception cref="ArgumentNullException">text is null.</exception>
-        /// <exception cref="System.ServiceProcess.TimeoutException">The operation did not complete before the time-out period ended.</exception>
+        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
         public void Write(string text)
         {
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (text == null)
             {
                 throw new ArgumentException();
@@ -700,9 +739,14 @@ namespace System.IO.Ports
         /// <exception cref="ArgumentOutOfRangeException">The offset or count parameters are outside a valid region of the buffer being
         /// passed. Either offset or count is less than zero.</exception>
         /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
-        /// <exception cref="System.ServiceProcess.TimeoutException">The operation did not complete before the time-out period ended.</exception>
+        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
         public void Write(char[] buffer, int offset, int count)
         {
+            if (!_opened)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (buffer == null)
             {
                 throw new ArgumentNullException();
@@ -713,7 +757,7 @@ namespace System.IO.Ports
                 throw new InvalidOperationException();
             }
 
-            if (offset + count >= buffer.Length)
+            if (offset + count > buffer.Length)
             {
                 throw new ArgumentException();
             }
