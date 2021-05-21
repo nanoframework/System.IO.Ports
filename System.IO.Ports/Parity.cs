@@ -1,4 +1,9 @@
-﻿namespace System.IO.Ports
+﻿//
+// Copyright (c) .NET Foundation and Contributors
+// See LICENSE file in the project root for full license information.
+//
+
+namespace System.IO.Ports
 {
     /// <summary>
     /// Specifies the parity bit for a System.IO.Ports.SerialPort object.

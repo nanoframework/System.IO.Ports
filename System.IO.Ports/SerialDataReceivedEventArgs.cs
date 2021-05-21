@@ -1,11 +1,16 @@
-﻿namespace System.IO.Ports
+﻿//
+// Copyright (c) .NET Foundation and Contributors
+// See LICENSE file in the project root for full license information.
+//
+
+namespace System.IO.Ports
 { 
     /// <summary>
     /// Provides data for the System.IO.Ports.SerialPort.DataReceived event.
     /// </summary>
     public class SerialDataReceivedEventArgs : EventArgs
     {
-        SerialData _data;
+        private readonly SerialData _data;
 
         internal SerialDataReceivedEventArgs(SerialData eventCode)
         {

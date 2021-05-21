@@ -1,11 +1,16 @@
-﻿using System;
+﻿//
+// Copyright (c) .NET Foundation and Contributors
+// See LICENSE file in the project root for full license information.
+//
+
+using System;
 using System.Text;
 
 namespace System.IO.Ports
 {
     internal class SerialStream : Stream
     {
-        private SerialPort _serial;
+        private readonly SerialPort _serial;
 
         internal SerialStream(SerialPort serial)
         {

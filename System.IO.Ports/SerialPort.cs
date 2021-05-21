@@ -1,4 +1,8 @@
-﻿
+﻿//
+// Copyright (c) .NET Foundation and Contributors
+// See LICENSE file in the project root for full license information.
+//
+
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Collections;
@@ -38,7 +42,7 @@ namespace System.IO.Ports
         private char _watchChar;
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
-        private object _syncLock;
+        private readonly object _syncLock;
         private string _newLine;
         private bool _hasBeenOpened = false;
 
@@ -270,7 +274,7 @@ namespace System.IO.Ports
         /// Gets or sets the port for communications, including but not limited to all available
         /// COM ports.
         /// </summary>
-        /// <exception cref=ArgumentException"">The System.IO.Ports.SerialPort.PortName property was set to a value with a length
+        /// <exception cref="ArgumentException">The System.IO.Ports.SerialPort.PortName property was set to a value with a length
         /// of zero. -or- The System.IO.Ports.SerialPort.PortName property was set to a value
         /// that starts with "\\". -or- The port name was not valid.</exception>
         /// <exception cref="ArgumentNullException">The System.IO.Ports.SerialPort.PortName property was set to null.</exception>
@@ -611,8 +615,8 @@ namespace System.IO.Ports
             }
 
             byte[] toRead = new byte[BytesToRead];
-            var ret = NativeRead(toRead, 0, toRead.Length);
-            // normally ret == toRead.Length
+            NativeRead(toRead, 0, toRead.Length);
+            // An exception is thrown if timeout, so we are sure to read only 1 byte properly
             return Encoding.GetString(toRead, 0, toRead.Length);
         }
 
@@ -837,6 +841,9 @@ namespace System.IO.Ports
             }
         }
 
+        /// <summary>
+        /// Dispose the Serial Port
+        /// </summary>
         public void Dispose()
         {
             lock (_syncLock)
