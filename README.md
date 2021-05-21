@@ -15,7 +15,136 @@
 
 ## Usage
 
-TO be added here
+You will find detailed examples in the [Tests](./Tests/UnitTestsSerialPort).
+
+### Creating the SerialPort
+
+You can create the `SerialPort` like this:
+
+```csharp
+var port = new SerialPort("COM2");
+```
+
+Note that the port name **must** be `COMx` where x is a number. 
+
+The GetPortNames method will gi you a list of available ports:
+
+```csharp
+var ports = SerialPort.GetPortNames();
+```
+
+You can as well directly specify the baud rate and other elements in the constructor:
+
+```csharp
+var port = new SerialPort("COM2", 115200);
+```
+
+Each property can be adjusted, including while the port is open. Be aware that this can generate hazardous behaviors. It is always recommended to change the properties once the port is closed.
+
+**Important**: you should setup a timeout for the read and write operations. If you have none, while operating a read or a write, you will wait indefinitely to read or write that everything is received or sent.
+
+```csharp
+port.WriteTimeout = 1000;
+port.ReadTimeout = 1000;
+```
+
+Note: some MCU do not support Hankshake or specific bit parity even if you can set them up in the constructor.
+
+### Opening and Closing the port
+
+The port can only be in operation once open and will finish his operations when closed. If you dispose the SerialPort, it will close it before.
+
+```csharp
+var port = new SerialPort("COM2");
+port.Open();
+// Do a lot of things here, write, read
+port.Close();
+```
+
+### Read and Write
+
+You have multiple functions to read and write, some are byte related, others string related. Note that the string one will use the `Enconding` charset that you will define. By default, this is UTF8.
+
+#### Sending and receiving bytes
+
+Example of sending and reading byte arrays:
+
+```csharp
+byte[] toSend = new byte[] { 0x42, 0xAA, 0x11, 0x00 };
+byte[] toReceive = new byte[50];
+// this will send the 4 bytes:
+port.Write(toSend, 0, toSend.Length);
+// This will only send the bytes AA and 11:
+port.Write(toSend, 1, 2);
+// This will check then number of available bytes to read
+var numBytesToRead = port.BytesToRead;
+// This will read 50 characters:
+port.Read(toReceive, 0, toReceive.Length);
+// this will read 10 characters and place them at the offset position 3:
+port.Read(toReceive, 3, 10);
+// Note: in case of time out while reading or writing, you will receive a TimeoutException
+// And you can as well read a single byte:
+byte oneByte = port.ReadByte();
+```
+
+#### Sending and receiving string
+
+You can as well write and read strings:
+
+```csharp
+string toSend = "I ❤ nanoFramework";
+port.WriteLine(toSend);
+// this will send the string encoded finishing by a new line, by default \r\n
+// You can change the new line by anything:
+port.NewLine = "❤❤";
+// Now it will send the 2 hearts as the end of line while operating a ReadLine or WriteLine
+// You can ad anytime change it back:
+port.NewLine = SerialPort.DefaultNewLine; // default is "\r\n"
+// This will read the existing buffer:
+string existingString = port.ReadExisting();
+// Note that if it can't properly convert the bytes to a string, you'll get an exception
+// This will read a full line, it has to be terminated by the NewLine string.
+// If nothing is found ending by the NewLine in the ReadTimeout time frame, a TimeoutException will be raised.
+string aFullLine = port.ReadLine();
+```
+
+### Events
+
+SerialPort supports events when characters are received.
+
+```csharp
+    // Subscribe to the event
+    port.DataReceived += DataReceivedNormalEvent;
+
+    // When you're done, you can as well unsubscribe
+    port.DataReceived -= DataReceivedNormalEvent;
+
+private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs e)
+{
+    var ser = (SerialPort)sender;
+    // Now you can check how many characters are available, read a line for example
+    var numBytesToRead = port.BytesToRead;
+    string aFullLine = ser.ReadLine();
+}
+```
+
+#### Case of WatchChar
+
+.NET nanoFramework has a specific API to watch for a specific character if present at the end of the transmission.
+
+```csharp
+    port.WatchChar = '\r';
+    // Subscribe to the event
+    port.DataReceived += DataReceivedNormalEvent;
+
+private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs e)
+{
+    if (e.EventType == SerialData.WatchChar)
+    {
+        // We have our special character at the end of the transmission
+    }
+}
+```
 
 ## Feedback and documentation
 
