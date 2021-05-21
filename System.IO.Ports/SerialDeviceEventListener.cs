@@ -32,6 +32,7 @@ namespace System.IO.Ports
 
         public void InitializeForEventSource()
         {
+            // This method has to exist
         }
 
         public bool OnEvent(BaseEvent ev)
