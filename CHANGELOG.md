@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.0-preview.19...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.0-preview.21...HEAD)
+
+**Documentation and other chores:**
+
+- Update 2 nuget dependencies [\#5](https://github.com/nanoframework/System.IO.Ports/pull/5)
+
+## [v1.0.0-preview.21](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.0-preview.21) (2021-05-30)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.0-preview.19...v1.0.0-preview.21)
 
 **Documentation and other chores:**
 
