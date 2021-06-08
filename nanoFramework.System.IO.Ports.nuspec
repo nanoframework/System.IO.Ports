@@ -20,10 +20,10 @@ This package requires a target with System.IO.Ports v$nativeVersion$.</descripti
     <summary>System.IO.Ports assembly for nanoFramework C# projects</summary>
     <tags>nanoFramework C# csharp netmf netnf System.IO.Ports</tags>
     <dependencies>
-      <dependency id="nanoFramework.CoreLibrary" version="1.10.5-preview.10" />
-      <dependency id="nanoFramework.Runtime.Events" version="1.9.1-preview.3" />
-      <dependency id="nanoFramework.System.Collections" version="1.2.0-preview.65" />
-      <dependency id="nanoFramework.System.Text" version="1.1.1-preview.59" />
+      <dependency id="nanoFramework.CoreLibrary" version="1.10.5-preview.13" />
+      <dependency id="nanoFramework.Runtime.Events" version="1.9.1-preview.5" />
+      <dependency id="nanoFramework.System.Collections" version="1.2.0-preview.67" />
+      <dependency id="nanoFramework.System.Text" version="1.1.1-preview.61" />
     </dependencies>
   </metadata>
   <files>
