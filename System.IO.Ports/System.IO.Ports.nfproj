@@ -57,7 +57,7 @@
     <Compile Include="Handshake.cs" />
     <Compile Include="Parity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerialSeviceController.cs" />
+    <Compile Include="SerialDeviceController.cs" />
     <Compile Include="SerialStream.cs" />
     <Compile Include="StopBits.cs" />
   </ItemGroup>
