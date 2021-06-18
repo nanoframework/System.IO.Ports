@@ -4,7 +4,6 @@
 //
 
 using nanoFramework.Runtime.Events;
-using System;
 using System.Collections;
 
 namespace System.IO.Ports
@@ -87,6 +86,5 @@ namespace System.IO.Ports
 
             return null;
         }
-
     }
 }
