@@ -6,7 +6,7 @@
 namespace System.IO.Ports
 {
     /// <summary>
-    /// Specifies the number of stop bits used on the System.IO.Ports.SerialPort object.
+    /// Specifies the number of stop bits used on the <see cref="SerialPort"/> object.
     /// </summary>
     public enum StopBits
     {        

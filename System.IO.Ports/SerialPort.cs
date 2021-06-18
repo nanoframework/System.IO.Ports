@@ -24,7 +24,7 @@ namespace System.IO.Ports
         /// </summary>
         public const string DefaultNewLine = "\r\n";
 
-        private static SerialDeviceEventListener s_eventListener = new SerialDeviceEventListener();
+        private static readonly SerialDeviceEventListener s_eventListener = new();
 
         private int _writeTimeout = InfiniteTimeout;
         private int _readTimeout = InfiniteTimeout;
@@ -39,7 +39,11 @@ namespace System.IO.Ports
         private SerialMode _mode = SerialMode.Normal;
         private string _deviceId;
         internal int _portIndex;
+
+#pragma warning disable IDE0052 // need this to be used in native code
         private char _watchChar;
+#pragma warning restore IDE0052 // Remove unread private members
+
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
         private readonly object _syncLock;
@@ -47,18 +51,19 @@ namespace System.IO.Ports
         private bool _hasBeenOpened = false;
 
         /// <summary>
-        /// Initializes a new instance of the System.IO.Ports.SerialPort class using the
+        /// Initializes a new instance of the <see cref="SerialPort"/> class using the
         /// specified port name, baud rate, parity bit, data bits, and stop bit.
         /// </summary>
         /// <param name="portName">The port to use (for example, COM1).</param>
         /// <param name="baudRate">The baud rate.</param>
-        /// <param name="parity">One of the System.IO.Ports.SerialPort.Parity values.</param>
+        /// <param name="parity">One of the <see cref="Parity"/> values.</param>
         /// <param name="dataBits">The data bits value.</param>
-        /// <param name="stopBits">One of the System.IO.Ports.SerialPort.StopBits values.</param>
-        /// <exception cref="System.IO.IOException">The specified port could not be found or opened.</exception>
+        /// <param name="stopBits">One of the <see cref="StopBits"/> values.</param>
+        /// <exception cref="IOException">The specified port could not be found or opened.</exception>
         public SerialPort(string portName, int baudRate = 9600, Parity parity = Parity.None, int dataBits = 8, StopBits stopBits = StopBits.One)
         {
             _syncLock = new object();
+
             // the UART name is an ASCII string with the COM port name in format 'COMn'
             // need to grab 'n' from the string and convert that to the integer value from the ASCII code (do this by subtracting 48 from the char value)
             _portIndex = (portName[3] - 48);
@@ -84,13 +89,14 @@ namespace System.IO.Ports
         /// <summary>
         /// Opens a new serial port connection.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">The specified port on the current instance of the System.IO.Ports.SerialPort
+        /// <exception cref="InvalidOperationException">The specified port on the current instance of the <see cref="SerialPort"/>.
         /// is already open.</exception>
         public void Open()
         {
             if (!_opened)
             {
                 _disposed = false;
+
                 // Initi should happen only once
                 if (!_hasBeenOpened)
                 {
@@ -101,9 +107,12 @@ namespace System.IO.Ports
 
                 // add the serial device to the event listener in order to receive the callbacks from the native interrupts
                 s_eventListener.AddSerialDevice(this);
+
                 // add serial device to collection
                 SerialDeviceController.DeviceCollection.Add(this);
+
                 _stream = new SerialStream(this);
+
                 _opened = true;
             }
             else
@@ -113,19 +122,21 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Closes the port connection, sets the System.IO.Ports.SerialPort.IsOpen property
-        /// to false, and disposes of the internal System.IO.Stream object.
+        /// Closes the port connection, sets the <see cref="IsOpen"/> property
+        /// to false, and disposes of the internal <see cref="Stream"/> object.
         /// </summary>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
         public void Close()
         {
             if (_opened)
             {
                 _stream.Flush();
+
                 // remove the pin from the event listener
                 s_eventListener.RemoveSerialDevice(_portIndex);
+
                 // find device
                 var device = FindDevice(_portIndex);
 
@@ -158,11 +169,12 @@ namespace System.IO.Ports
         /// <exception cref="ArgumentOutOfRangeException">The baud rate specified is less than or equal to zero, or is greater than the
         /// maximum allowable baud rate for the device.</exception>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
         public int BaudRate
         {
             get => _baudRate;
+
             set
             {
                 if (value <= 0)
@@ -171,6 +183,7 @@ namespace System.IO.Ports
                 }
 
                 _baudRate = value;
+
                 NativeConfig();
             }
         }
@@ -178,20 +191,22 @@ namespace System.IO.Ports
         //
         /// <summary>
         /// Gets or sets the handshaking protocol for serial port transmission of data using
-        /// a value from System.IO.Ports.Handshake.
+        /// a value from <see cref="Ports.Handshake"/>.
         /// </summary>
-        /// <exception cref="System.IO.IOException">
+        /// <exception cref="IOException">
         /// The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.
         /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">The value passed is not a valid value in the System.IO.Ports.Handshake enumeration.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The value passed is not a valid value in the <see cref="Ports.Handshake"/> enumeration.</exception>
         public Handshake Handshake
         {
             get => _handshake;
+
             set
             {
                 _handshake = value;
+
                 NativeConfig();
             }
         }
@@ -201,7 +216,7 @@ namespace System.IO.Ports
         /// </summary>
         /// <exception cref="IOException">
         /// The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -210,6 +225,7 @@ namespace System.IO.Ports
         public int DataBits
         {
             get => _dataBits;
+
             set
             {
                 if ((value < 5) || (value > 8))
@@ -218,6 +234,7 @@ namespace System.IO.Ports
                 }
 
                 _dataBits = value;
+
                 NativeConfig();
             }
         }
@@ -226,11 +243,12 @@ namespace System.IO.Ports
         /// Gets or sets the parity-checking protocol.
         /// </summary>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
         public Parity Parity
         {
             get => _parity;
+
             set
             {
                 _parity = value;
@@ -241,10 +259,11 @@ namespace System.IO.Ports
         /// <summary>
         /// Gets or sets the Serial Mode
         /// </summary>
-        /// <remarks>This is a .NET nanoFrmaework property only</remarks>
+        /// <remarks>This is a .NET nanoFramework property only.</remarks>
         public SerialMode Mode
         {
             get => _mode;
+
             set
             {
                 _mode = value;
@@ -258,14 +277,16 @@ namespace System.IO.Ports
         /// Gets or sets the standard number of stopbits per byte.
         /// </summary>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
         public StopBits StopBits
         {
             get => _stopBits;
+
             set
             {
                 _stopBits = value;
+
                 NativeConfig();
             }
         }
@@ -274,10 +295,10 @@ namespace System.IO.Ports
         /// Gets or sets the port for communications, including but not limited to all available
         /// COM ports.
         /// </summary>
-        /// <exception cref="ArgumentException">The System.IO.Ports.SerialPort.PortName property was set to a value with a length
-        /// of zero. -or- The System.IO.Ports.SerialPort.PortName property was set to a value
+        /// <exception cref="ArgumentException">The <see cref="PortName"/> property was set to a value with a length
+        /// of zero. -or- The <see cref="PortName"/> property was set to a value
         /// that starts with "\\". -or- The port name was not valid.</exception>
-        /// <exception cref="ArgumentNullException">The System.IO.Ports.SerialPort.PortName property was set to null.</exception>
+        /// <exception cref="ArgumentNullException">The <see cref="PortName"/> property was set to null.</exception>
         /// <exception cref="InvalidOperationException">The specified port is open.</exception>
         public string PortName
         {
@@ -308,7 +329,9 @@ namespace System.IO.Ports
 
                     _deviceId = value;
                     _portIndex = (value[3] - 48);
+
                     NativeInit();
+
                     _hasBeenOpened = true;
                     _disposed = false;
                 }
@@ -319,7 +342,7 @@ namespace System.IO.Ports
         /// Sets a character to watch for in the incoming data stream.
         /// </summary>
         /// <remarks>
-        /// This property is specific to nanoFramework. There is no equivalent in the SerialPort API.
+        /// This property is specific to .NET nanoFramework. There is no equivalent in the System.IO.Ports API.
         /// When calling any of the Read function with a buffer, no matter if the requested quantity of bytes hasn't been read, only the specific amount of data will be returned up to the character.
         /// Also if this character is received in the incoming data stream, an event is fired with it's <see cref="SerialData"/> parameter set to <see cref="SerialData.WatchChar"/>.
         /// </remarks>
@@ -328,6 +351,7 @@ namespace System.IO.Ports
             set
             {
                 _watchChar = value;
+
                 NativeSetWatchChar();
             }
         }
@@ -335,32 +359,33 @@ namespace System.IO.Ports
         /// <summary>
         /// Gets or sets the byte encoding for pre- and post-transmission conversion of text.
         /// </summary>
-        /// <exception cref="ArgumentNullException">The System.IO.Ports.SerialPort.Encoding property was set to null.</exception>
+        /// <exception cref="ArgumentNullException">The <see cref="Encoding"/> property was set to null.</exception>
         /// <exception cref="ArgumentException">
-        /// The System.IO.Ports.SerialPort.Encoding property was set to an encoding that
-        /// is not System.Text.ASCIIEncoding, System.Text.UTF8Encoding, System.Text.UTF32Encoding,
-        /// System.Text.UnicodeEncoding, one of the Windows single byte encodings, or one
-        /// of the Windows double byte encodings.
+        /// The <see cref="Encoding"/> property was set to an encoding that
+        /// is not <see cref="UTF8Encoding"/>.
         /// </exception>
+        /// <remarks>
+        /// .NET nanoFrameowrk implementation of serial port only supports <see cref="UTF8Encoding"/>.
+        /// </remarks>
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
         /// <summary>
-        /// Gets a value indicating the open or closed status of the System.IO.Ports.SerialPort
+        /// Gets a value indicating the open or closed status of the <see cref="SerialPort"/>
         /// object.
         /// </summary>
-        /// <exception cref="ArgumentNullException">The System.IO.Ports.SerialPort.IsOpen value passed is null.</exception>
-        /// <exception cref="ArgumentException">The System.IO.Ports.SerialPort.IsOpen value passed is an empty string ("").</exception>
-
+        /// <exception cref="ArgumentNullException">The <see cref="IsOpen"/> value passed is null.</exception>
+        /// <exception cref="ArgumentException">The <see cref="IsOpen"/> value passed is an empty string ("").</exception>
         public bool IsOpen { get => _opened; }
 
         /// <summary>
-        /// Gets or sets the value used to interpret the end of a call to the System.IO.Ports.SerialPort.ReadLine
-        /// and System.IO.Ports.SerialPort.WriteLine(System.String) methods.
+        /// Gets or sets the value used to interpret the end of a call to the <see cref="ReadLine"/>
+        /// and <see cref="WriteLine"/>(System.String) methods.
         /// </summary>
         /// <exception cref="ArgumentException">The property value is empty or the property value is null.</exception>
         public string NewLine
         {
             get => _newLine;
+
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -377,12 +402,13 @@ namespace System.IO.Ports
         /// operation does not finish.
         /// </summary>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to System.IO.Ports.SerialPort.InfiniteTimeout.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to <see cref="InfiniteTimeout"/>.</exception>
         public int ReadTimeout
         {
             get => _readTimeout;
+
             set
             {
                 if (value <= 0)
@@ -399,13 +425,14 @@ namespace System.IO.Ports
         /// operation does not finish.
         /// </summary>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The System.IO.Ports.SerialPort.WriteTimeout value is less than zero and not equal
-        /// to System.IO.Ports.SerialPort.InfiniteTimeout.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="WriteTimeout"/> value is less than zero and not equal
+        /// to <see cref="InfiniteTimeout"/>.</exception>
         public int WriteTimeout
         {
             get => _writeTimeout;
+
             set
             {
                 if ((value < 0) && (value != InfiniteTimeout))
@@ -418,14 +445,15 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets or sets the number of bytes in the internal input buffer before a System.IO.Ports.SerialPort.DataReceived
+        /// Gets or sets the number of bytes in the internal input buffer before a <see cref="DataReceived"/>
         /// event occurs.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">The System.IO.Ports.SerialPort.ReceivedBytesThreshold value is less than or equal
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ReceivedBytesThreshold"/> value is less than or equal
         /// to zero.</exception>
         public int ReceivedBytesThreshold
         {
             get => _receivedBytesThreshold;
+
             set
             {
                 if (value <= 0)
@@ -438,11 +466,11 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets the underlying System.IO.Stream object for a System.IO.Ports.SerialPort
+        /// Gets the underlying System.IO.Stream object for a <see cref="SerialPort"/>
         /// object.
         /// </summary>
-        /// <exception cref="InvalidOperationException">The stream is closed. This can occur because the System.IO.Ports.SerialPort.Open
-        /// method has not been called or the System.IO.Ports.SerialPort.Close method has
+        /// <exception cref="InvalidOperationException">The stream is closed. This can occur because the <see cref="Open"/>
+        /// method has not been called or the <see cref="Close"/> method has
         /// been called.</exception>
         public Stream BaseStream { get => _stream; }
 
@@ -460,7 +488,7 @@ namespace System.IO.Ports
         #endregion
 
         /// <summary>
-        /// Indicates that data has been received through a port represented by the System.IO.Ports.SerialPort
+        /// Indicates that data has been received through a port represented by the <see cref="SerialPort"/>
         /// object.
         /// </summary>
         public event SerialDataReceivedEventHandler DataReceived
@@ -520,7 +548,6 @@ namespace System.IO.Ports
         /// Handles internal events and re-dispatches them to the publicly subscribed delegates.
         /// </summary>
         /// <param name="eventType">The <see cref="SerialData"/> event type.</param>
-
         internal void OnSerialDataReceivedInternal(SerialData eventType)
         {
             SerialDataReceivedEventHandler callbacks = null;
@@ -537,7 +564,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Reads a number of bytes from the System.IO.Ports.SerialPort input buffer and
+        /// Reads a number of bytes from the <see cref="SerialPort"/> input buffer and
         /// writes those bytes into a byte array at the specified offset.
         /// </summary>
         /// <param name="buffer">The byte array to write the input to.</param>
@@ -550,7 +577,7 @@ namespace System.IO.Ports
         /// <exception cref="ArgumentOutOfRangeException">The offset or count parameters are outside a valid region of the buffer being
         /// passed. Either offset or count is less than zero.</exception>
         /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
-        /// <exception cref="System.TimeoutException">No bytes were available to read.</exception>
+        /// <exception cref="TimeoutException">No bytes were available to read.</exception>
         public int Read(byte[] buffer, int offset, int count)
         {
             if (!_opened)
@@ -577,11 +604,11 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Synchronously reads one byte from the System.IO.Ports.SerialPort input buffer.
+        /// Synchronously reads one byte from the <see cref="SerialPort"/> input buffer.
         /// </summary>
-        /// <returns>The byte, cast to an System.Int32, or -1 if the end of the stream has been read.</returns>
+        /// <returns>The byte, cast to an <see cref="int"/>, or -1 if the end of the stream has been read.</returns>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
-        /// <exception cref="System.ServiceProcess.TimeoutException">The operation did not complete before the time-out period ended. -or- No byte
+        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended. -or- No byte
         /// was read.</exception>
         public int ReadByte()
         {
@@ -591,15 +618,17 @@ namespace System.IO.Ports
             }
 
             byte[] toRead = new byte[1];
+
             NativeRead(toRead, 0, 1);
+
             return toRead[0];
         }
 
         /// <summary>
         /// Reads all immediately available bytes, based on the encoding, in both the stream
-        /// and the input buffer of the System.IO.Ports.SerialPort object.
+        /// and the input buffer of the <see cref="SerialPort"/> object.
         /// </summary>
-        /// <returns> The contents of the stream and the input buffer of the System.IO.Ports.SerialPort
+        /// <returns> The contents of the stream and the input buffer of the <see cref="SerialPort"/>
         /// object.</returns>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         public string ReadExisting()
@@ -615,18 +644,20 @@ namespace System.IO.Ports
             }
 
             byte[] toRead = new byte[BytesToRead];
+
             NativeRead(toRead, 0, toRead.Length);
+
             // An exception is thrown if timeout, so we are sure to read only 1 byte properly
             return Encoding.GetString(toRead, 0, toRead.Length);
         }
 
         /// <summary>
-        /// Reads up to the System.IO.Ports.SerialPort.NewLine value in the input buffer.
+        /// Reads up to the <see cref="NewLine"/> value in the input buffer.
         /// </summary>
-        /// <returns>The contents of the input buffer up to the first occurrence of a System.IO.Ports.SerialPort.NewLine
+        /// <returns>The contents of the input buffer up to the first occurrence of a <see cref="NewLine"/>
         /// value.</returns>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
-        /// <exception cref="System.TimeoutException">The operation did not complete before the time-out period ended. -or- No bytes
+        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended. -or- No bytes
         /// were read.</exception>
         public string ReadLine()
         {
@@ -635,13 +666,15 @@ namespace System.IO.Ports
                 throw new InvalidOperationException();
             }
 
-            string retReadLine = string.Empty;
             byte[] singleByte = new byte[1];
             bool isNewLine = false;
-            ArrayList lineText = new ArrayList();
+
+            ArrayList lineText = new();
+
             byte[] newLineByteArray = Encoding.GetBytes(_newLine);
 
             DateTime dtTimeout = DateTime.UtcNow.AddMilliseconds(_readTimeout);
+
             do
             {
                 if (BytesToRead > 0)
@@ -653,6 +686,7 @@ namespace System.IO.Ports
                     if (lineText.Count >= newLineByteArray.Length)
                     {
                         isNewLine = true;
+
                         for (int i = 0; i < newLineByteArray.Length; i++)
                         {
                             if((byte)lineText[lineText.Count - newLineByteArray.Length + i] != newLineByteArray[i])
@@ -672,12 +706,14 @@ namespace System.IO.Ports
             while (!isNewLine);
 
             byte[] lineTextBytes = new byte[lineText.Count];
+
             for(int i =0; i<lineText.Count; i++)
             {
                 lineTextBytes[i] = (byte)lineText[i];
             }
 
-            retReadLine = Encoding.GetString(lineTextBytes, 0, lineTextBytes.Length);
+            string retReadLine = Encoding.GetString(lineTextBytes, 0, lineTextBytes.Length);
+
             return retReadLine;
         }
 
@@ -745,7 +781,9 @@ namespace System.IO.Ports
             }
 
             byte[] toSend = Encoding.GetBytes(text);
+
             NativeWrite(toSend, 0, toSend.Length);
+
             NativeStore();
         }
 
@@ -786,18 +824,20 @@ namespace System.IO.Ports
             }
 
             byte[] toSend = Encoding.GetBytes(new string(buffer, offset, count));
+
             NativeWrite(toSend, 0, toSend.Length);
+
             NativeStore();
         }
 
         /// <summary>
-        /// Writes the specified string and the System.IO.Ports.SerialPort.NewLine value
+        /// Writes the specified string and the <see cref="NewLine"/> value
         /// to the output buffer.
         /// </summary>
         /// <param name="text">The string to write to the output buffer.</param>
         /// <exception cref="ArgumentNullException">The text parameter is null.</exception>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
-        /// <exception cref="TimeoutException">The System.IO.Ports.SerialPort.WriteLine(System.String) method could not write
+        /// <exception cref="TimeoutException">The <see cref="WriteLine"/>(System.String) method could not write
         /// to the stream.</exception>
         public void WriteLine(string text) => Write(text + NewLine);
 
@@ -815,13 +855,13 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Releases the unmanaged resources used by the System.IO.Ports.SerialPort and optionally
+        /// Releases the unmanaged resources used by the <see cref="SerialPort"/> and optionally
         /// releases the managed resources.
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged
         /// resources.</param>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
-        /// port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
         protected void Dispose(bool disposing)
         {
@@ -882,6 +922,7 @@ namespace System.IO.Ports
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetDeviceSelector();
+        
         #endregion
     }
 }

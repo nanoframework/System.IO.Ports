@@ -102,10 +102,9 @@ namespace UnitTestsSerialPort
             _serTwo.WriteTimeout = 1000;
             _serTwo.ReadTimeout = 1000;
             string toSend = "Hi, this is a simple test with string";
-            string toReceive = string.Empty;
             // Act
             _serOne.WriteLine(toSend);
-            toReceive = _serTwo.ReadLine();
+            string toReceive = _serTwo.ReadLine();
             // Assert
             Assert.Equal(toSend + _serOne.NewLine, toReceive);
         }
@@ -120,10 +119,9 @@ namespace UnitTestsSerialPort
             _serTwo.WriteTimeout = 1000;
             _serTwo.ReadTimeout = 1000;
             string toSend = $"Hi, this is a simple test with string{_serOne.NewLine}And with a second line{_serOne.NewLine}Only line by line should be read{_serOne.NewLine}";
-            string toReceive = string.Empty;
             // Act
             _serOne.WriteLine(toSend);
-            toReceive = _serTwo.ReadLine();
+            string toReceive = _serTwo.ReadLine();
             // Assert
             Assert.Equal($"Hi, this is a simple test with string{_serOne.NewLine}", toReceive);
             toReceive = _serTwo.ReadLine();
