@@ -12,7 +12,7 @@ namespace System.IO.Ports
     /// <summary>
     /// Represents a serial port resource.
     /// </summary>
-    public class SerialPort : IDisposable
+    public sealed class SerialPort : IDisposable
     {
         /// <summary>
         /// Indicates that no time-out should occur.
@@ -24,18 +24,27 @@ namespace System.IO.Ports
         /// </summary>
         public const string DefaultNewLine = "\r\n";
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private static readonly SerialDeviceEventListener s_eventListener = new();
+
+        private bool _disposed;
+
+        // this is used as the lock object 
+        // a lock is required because multiple threads can access the SerialPort
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        private readonly object _syncLock = new();
+
+        // flag to signal an open serial port
+        private bool _opened;
 
         private int _writeTimeout = InfiniteTimeout;
         private int _readTimeout = InfiniteTimeout;
         private int _receivedBytesThreshold;
-        private int _baudRate = 9600;
-        private bool _opened = false;
-        private bool _disposed = true;
+        private int _baudRate;
         private Handshake _handshake = Handshake.None;
-        private StopBits _stopBits = StopBits.One;
-        private int _dataBits = 8;
-        private Parity _parity = Parity.None;
+        private StopBits _stopBits;
+        private int _dataBits;
+        private Parity _parity;
         private SerialMode _mode = SerialMode.Normal;
         private string _deviceId;
         internal int _portIndex;
@@ -46,9 +55,9 @@ namespace System.IO.Ports
 
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
-        private readonly object _syncLock;
-        private string _newLine;
-        private bool _hasBeenOpened = false;
+        private string _newLine = DefaultNewLine;
+
+        private Encoding _encoding = Encoding.UTF8;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerialPort"/> class using the
@@ -60,15 +69,20 @@ namespace System.IO.Ports
         /// <param name="dataBits">The data bits value.</param>
         /// <param name="stopBits">One of the <see cref="StopBits"/> values.</param>
         /// <exception cref="IOException">The specified port could not be found or opened.</exception>
-        public SerialPort(string portName, int baudRate = 9600, Parity parity = Parity.None, int dataBits = 8, StopBits stopBits = StopBits.One)
+        /// <exception cref="ArgumentException">The specified port could as aleready been opened.</exception>
+        public SerialPort(
+            string portName,
+            int baudRate = 9600,
+            Parity parity = Parity.None,
+            int dataBits = 8,
+            StopBits stopBits = StopBits.One)
         {
-            _syncLock = new object();
-
             // the UART name is an ASCII string with the COM port name in format 'COMn'
             // need to grab 'n' from the string and convert that to the integer value from the ASCII code (do this by subtracting 48 from the char value)
-            _portIndex = (portName[3] - 48);
+            _portIndex = portName[3] - 48;
 
             var device = FindDevice(_portIndex);
+
             if (device == null)
             {
                 _deviceId = portName;
@@ -76,14 +90,16 @@ namespace System.IO.Ports
                 _parity = parity;
                 _dataBits = dataBits;
                 _stopBits = stopBits;
+                _newLine = DefaultNewLine;
+
+                // add serial device to collection
+                SerialDeviceController.DeviceCollection.Add(this);
             }
             else
             {
                 // this device already exists throw an exception
                 throw new ArgumentException();
             }
-
-            _newLine = DefaultNewLine;
         }
 
         /// <summary>
@@ -97,19 +113,10 @@ namespace System.IO.Ports
             {
                 _disposed = false;
 
-                // Initi should happen only once
-                if (!_hasBeenOpened)
-                {
-                    NativeInit();
-                }
-
-                _hasBeenOpened = true;
+                NativeInit();
 
                 // add the serial device to the event listener in order to receive the callbacks from the native interrupts
                 s_eventListener.AddSerialDevice(this);
-
-                // add serial device to collection
-                SerialDeviceController.DeviceCollection.Add(this);
 
                 _stream = new SerialStream(this);
 
@@ -136,15 +143,6 @@ namespace System.IO.Ports
 
                 // remove the pin from the event listener
                 s_eventListener.RemoveSerialDevice(_portIndex);
-
-                // find device
-                var device = FindDevice(_portIndex);
-
-                if (device != null)
-                {
-                    // remove device from collection
-                    SerialDeviceController.DeviceCollection.Remove(device);
-                }
 
                 _stream.Dispose();
             }
@@ -184,7 +182,11 @@ namespace System.IO.Ports
 
                 _baudRate = value;
 
-                NativeConfig();
+                // reconfig needed, if opened
+                if (_opened)
+                {
+                    NativeConfig();
+                }
             }
         }
 
@@ -207,7 +209,11 @@ namespace System.IO.Ports
             {
                 _handshake = value;
 
-                NativeConfig();
+                // reconfig needed, if opened
+                if (_opened)
+                {
+                    NativeConfig();
+                }
             }
         }
 
@@ -235,7 +241,11 @@ namespace System.IO.Ports
 
                 _dataBits = value;
 
-                NativeConfig();
+                // reconfig needed, if opened
+                if (_opened)
+                {
+                    NativeConfig();
+                }
             }
         }
 
@@ -252,7 +262,12 @@ namespace System.IO.Ports
             set
             {
                 _parity = value;
-                NativeConfig();
+
+                // reconfig needed, if opened
+                if (_opened)
+                {
+                    NativeConfig();
+                }
             }
         }
 
@@ -268,8 +283,11 @@ namespace System.IO.Ports
             {
                 _mode = value;
 
-                // need to reconfigure device
-                NativeConfig();
+                // reconfig needed, if opened
+                if (_opened)
+                {
+                    NativeConfig();
+                }
             }
         }
 
@@ -287,19 +305,20 @@ namespace System.IO.Ports
             {
                 _stopBits = value;
 
-                NativeConfig();
+                // reconfig needed, if opened
+                if (_opened)
+                {
+                    NativeConfig();
+                }
             }
         }
 
         /// <summary>
-        /// Gets or sets the port for communications, including but not limited to all available
-        /// COM ports.
+        /// Gets the port for communications.
         /// </summary>
-        /// <exception cref="ArgumentException">The <see cref="PortName"/> property was set to a value with a length
-        /// of zero. -or- The <see cref="PortName"/> property was set to a value
-        /// that starts with "\\". -or- The port name was not valid.</exception>
-        /// <exception cref="ArgumentNullException">The <see cref="PortName"/> property was set to null.</exception>
-        /// <exception cref="InvalidOperationException">The specified port is open.</exception>
+        /// <remarks>
+        /// .NET nanoFramework doesn't support changing the port.
+        /// </remarks>
         public string PortName
         {
             get
@@ -310,31 +329,6 @@ namespace System.IO.Ports
                 }
 
                 throw new ObjectDisposedException();
-            }
-
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentException();
-                }
-
-                if (_deviceId != value)
-                {
-                    // First dispose the old one
-                    if (_hasBeenOpened)
-                    {
-                        NativeDispose();
-                    }
-
-                    _deviceId = value;
-                    _portIndex = (value[3] - 48);
-
-                    NativeInit();
-
-                    _hasBeenOpened = true;
-                    _disposed = false;
-                }
             }
         }
 
@@ -352,7 +346,11 @@ namespace System.IO.Ports
             {
                 _watchChar = value;
 
-                NativeSetWatchChar();
+                // update native, if opened
+                if (_opened)
+                {
+                    NativeSetWatchChar();
+                }
             }
         }
 
@@ -367,7 +365,15 @@ namespace System.IO.Ports
         /// <remarks>
         /// .NET nanoFrameowrk implementation of serial port only supports <see cref="UTF8Encoding"/>.
         /// </remarks>
-        public Encoding Encoding { get; set; } = Encoding.UTF8;
+        public Encoding Encoding
+        {
+            get => _encoding;
+
+            set
+            {
+                _encoding = value;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating the open or closed status of the <see cref="SerialPort"/>
@@ -479,7 +485,7 @@ namespace System.IO.Ports
         /// </summary>
         /// <returns>The number of bytes of data in the receive buffer.</returns>
         /// <exception cref="InvalidOperationException">The port is not open.</exception>
-        public int BytesToRead
+        public extern int BytesToRead
         {
             [MethodImpl(MethodImplOptions.InternalCall)]
             get;
@@ -872,6 +878,15 @@ namespace System.IO.Ports
                     if (_opened)
                     {
                         Close();
+                    }
+
+                    // find device
+                    var device = FindDevice(_portIndex);
+
+                    if (device != null)
+                    {
+                        // remove device from collection
+                        SerialDeviceController.DeviceCollection.Remove(device);
                     }
 
                     NativeDispose();

@@ -11,5 +11,7 @@ namespace System.IO.Ports
     /// </summary>
     /// <param name="sender">The sender of the event, which is the <see cref="SerialPort"/> object.</param>
     /// <param name="e">A <see cref="SerialDataReceivedEventArgs"/> object that contains the event data.</param>
-    public delegate void SerialDataReceivedEventHandler(object sender, SerialDataReceivedEventArgs e);
+    public delegate void SerialDataReceivedEventHandler(
+        object sender,
+        SerialDataReceivedEventArgs e);
 }

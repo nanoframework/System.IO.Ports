@@ -14,11 +14,8 @@ namespace System.IO.Ports
     {
         // this is used as the lock object 
         // a lock is required because multiple threads can access the SerialDevice controller
+        [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
         private static object _syncLock;
-
-        // we can have only one instance of the SerialDeviceController
-        // need to do a lazy initialization of this field to make sure it exists when called elsewhere.
-        private static SerialDeviceController s_instance;
 
         // backing field for DeviceCollection
         private static ArrayList s_deviceCollection;
@@ -56,31 +53,6 @@ namespace System.IO.Ports
             {
                 s_deviceCollection = value;
             }
-        }
-
-        /// <summary>
-        /// Gets the default serial device controller for the system.
-        /// </summary>
-        /// <returns>The default GPIO controller for the system, or null if the system has no GPIO controller.</returns>
-        internal static SerialDeviceController GetDefault()
-        {
-            if (s_instance == null)
-            {
-                if (_syncLock == null)
-                {
-                    _syncLock = new object();
-                }
-
-                lock (_syncLock)
-                {
-                    if (s_instance == null)
-                    {
-                        s_instance = new SerialDeviceController();
-                    }
-                }
-            }
-
-            return s_instance;
         }
     }
 }
