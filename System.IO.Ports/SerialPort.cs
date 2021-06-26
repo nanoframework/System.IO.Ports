@@ -46,19 +46,18 @@ namespace System.IO.Ports
         private int _dataBits;
         private Parity _parity;
         private SerialMode _mode = SerialMode.Normal;
-        private string _deviceId;
+        private readonly string _deviceId;
         internal int _portIndex;
 
-#pragma warning disable IDE0052 // need this to be used in native code
+#pragma warning disable S4487 // need this to be used in native code
         private char _watchChar;
-#pragma warning restore IDE0052 // Remove unread private members
+#pragma warning restore S4487 // Unread "private" fields should be removed
 
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
         private string _newLine = DefaultNewLine;
 
         private Encoding _encoding = Encoding.UTF8;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SerialPort"/> class using the
         /// specified port name, baud rate, parity bit, data bits, and stop bit.
@@ -323,12 +322,7 @@ namespace System.IO.Ports
         {
             get
             {
-                if (!_disposed)
-                {
-                    return _deviceId;
-                }
-
-                throw new ObjectDisposedException();
+                return _deviceId;
             }
         }
 
@@ -352,6 +346,11 @@ namespace System.IO.Ports
                     NativeSetWatchChar();
                 }
             }
+
+            get
+            {
+                throw new NotSupportedException();
+            }
         }
 
         /// <summary>
@@ -365,7 +364,9 @@ namespace System.IO.Ports
         /// <remarks>
         /// .NET nanoFrameowrk implementation of serial port only supports <see cref="UTF8Encoding"/>.
         /// </remarks>
+#pragma warning disable S2292 // can't have this adding a automated backing field
         public Encoding Encoding
+#pragma warning restore S2292 // Trivial properties should be auto-implemented
         {
             get => _encoding;
 

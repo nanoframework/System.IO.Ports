@@ -10,7 +10,7 @@ namespace System.IO.Ports
     /// <summary>
     /// This class is used to keep tabs on what serial ports are open.
     /// </summary>
-    internal sealed class SerialDeviceController
+    internal static class SerialDeviceController
     {
         // this is used as the lock object 
         // a lock is required because multiple threads can access the SerialDevice controller
