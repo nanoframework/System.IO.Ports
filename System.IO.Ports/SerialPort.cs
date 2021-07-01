@@ -68,7 +68,7 @@ namespace System.IO.Ports
         /// <param name="dataBits">The data bits value.</param>
         /// <param name="stopBits">One of the <see cref="StopBits"/> values.</param>
         /// <exception cref="IOException">The specified port could not be found or opened.</exception>
-        /// <exception cref="ArgumentException">The specified port could as aleready been opened.</exception>
+        /// <exception cref="ArgumentException">The specified port is already opened.</exception>
         public SerialPort(
             string portName,
             int baudRate = 9600,
@@ -97,7 +97,9 @@ namespace System.IO.Ports
             else
             {
                 // this device already exists throw an exception
+#pragma warning disable S3928 // OK to throw this exception without details on the argument.
                 throw new ArgumentException();
+#pragma warning restore S3928 // Parameter names used into ArgumentException constructors should match an existing one 
             }
         }
 
@@ -106,6 +108,7 @@ namespace System.IO.Ports
         /// </summary>
         /// <exception cref="InvalidOperationException">The specified port on the current instance of the <see cref="SerialPort"/>.
         /// is already open.</exception>
+        /// <exception cref="ArgumentException">One (or more) of the properties set to configure this <see cref="SerialPort"/> are invalid.</exception>
         public void Open()
         {
             if (!_opened)
