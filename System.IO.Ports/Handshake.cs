@@ -1,8 +1,13 @@
-﻿namespace System.IO.Ports
+﻿//
+// Copyright (c) .NET Foundation and Contributors
+// See LICENSE file in the project root for full license information.
+//
+
+namespace System.IO.Ports
 {
     /// <summary>
     /// Specifies the control protocol used in establishing a serial port communication
-    /// for a System.IO.Ports.SerialPort object.
+    /// for a <see cref="SerialPort"/> object.
     /// </summary>
     public enum Handshake
     {

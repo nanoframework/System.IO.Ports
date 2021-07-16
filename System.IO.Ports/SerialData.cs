@@ -6,7 +6,7 @@
 namespace System.IO.Ports
 {
     /// <summary>
-    /// Specifies the type of character that was received on the serial port of the System.IO.Ports.SerialPort object.
+    /// Specifies the type of character that was received on the serial port of the <see cref="SerialPort"/> object.
     /// </summary>
     public enum SerialData
     {

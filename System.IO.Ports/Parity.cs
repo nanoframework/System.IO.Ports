@@ -6,7 +6,7 @@
 namespace System.IO.Ports
 {
     /// <summary>
-    /// Specifies the parity bit for a System.IO.Ports.SerialPort object.
+    /// Specifies the parity bit for a <see cref="SerialPort"/> object.
     /// </summary>
     public enum Parity
     {

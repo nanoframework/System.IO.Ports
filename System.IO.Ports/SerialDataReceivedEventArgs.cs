@@ -4,9 +4,9 @@
 //
 
 namespace System.IO.Ports
-{ 
+{
     /// <summary>
-    /// Provides data for the System.IO.Ports.SerialPort.DataReceived event.
+    /// Provides data for the <see cref="SerialPort.DataReceived"/> event.
     /// </summary>
     public class SerialDataReceivedEventArgs : EventArgs
     {

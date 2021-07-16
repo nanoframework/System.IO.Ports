@@ -4,7 +4,6 @@
 //
 
 using nanoFramework.Runtime.Events;
-using System;
 using System.Collections;
 
 namespace System.IO.Ports
@@ -12,7 +11,7 @@ namespace System.IO.Ports
     internal class SerialDeviceEventListener : IEventProcessor, IEventListener
     {
         // Map of serial device numbers to SerialDevice objects.
-        private readonly ArrayList _serialDevicesMap = new ArrayList();
+        private readonly ArrayList _serialDevicesMap = new();
 
         public SerialDeviceEventListener()
         {
@@ -87,6 +86,5 @@ namespace System.IO.Ports
 
             return null;
         }
-
     }
 }
