@@ -478,7 +478,9 @@ namespace System.IO.Ports
                 {
                     if (_disposed)
                     {
+#pragma warning disable S3877 // OK to throw this here
                         throw new ObjectDisposedException();
+#pragma warning restore S3877 // Exceptions should not be thrown from unexpected methods
                     }
 
                     SerialDataReceivedEventHandler callbacksOld = _callbacksDataReceivedEvent;
@@ -503,7 +505,9 @@ namespace System.IO.Ports
                 {
                     if (_disposed)
                     {
+#pragma warning disable S3877 // OK to throw this here
                         throw new ObjectDisposedException();
+#pragma warning restore S3877 // Exceptions should not be thrown from unexpected methods
                     }
 
                     SerialDataReceivedEventHandler callbacksOld = _callbacksDataReceivedEvent;
@@ -557,30 +561,10 @@ namespace System.IO.Ports
         /// passed. Either offset or count is less than zero.</exception>
         /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
         /// <exception cref="TimeoutException">No bytes were available to read.</exception>
-        public int Read(byte[] buffer, int offset, int count)
-        {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (buffer == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if ((offset > buffer.Length) || (count > buffer.Length))
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (offset + count > buffer.Length)
-            {
-                throw new ArgumentException();
-            }
-
-            return (int)NativeRead(buffer, offset, count);
-        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+#pragma warning disable S4200 // OK to make a direct call
+        public extern int Read(byte[] buffer, int offset, int count);
+#pragma warning restore S4200 // Native methods should be wrapped
 
         /// <summary>
         /// Synchronously reads one byte from the <see cref="SerialPort"/> input buffer.
@@ -591,16 +575,11 @@ namespace System.IO.Ports
         /// was read.</exception>
         public int ReadByte()
         {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
+            byte[] buffer = new byte[1];
 
-            byte[] toRead = new byte[1];
+            Read(buffer, 0, 1);
 
-            NativeRead(toRead, 0, 1);
-
-            return toRead[0];
+            return buffer[0];
         }
 
         /// <summary>
@@ -610,91 +589,22 @@ namespace System.IO.Ports
         /// <returns> The contents of the stream and the input buffer of the <see cref="SerialPort"/>
         /// object.</returns>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
-        public string ReadExisting()
-        {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (BytesToRead == 0)
-            {
-                return string.Empty;
-            }
-
-            byte[] toRead = new byte[BytesToRead];
-
-            NativeRead(toRead, 0, toRead.Length);
-
-            // An exception is thrown if timeout, so we are sure to read only 1 byte properly
-            return Encoding.GetString(toRead, 0, toRead.Length);
-        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+#pragma warning disable S4200 // OK to make a direct call
+        public extern string ReadExisting();
+#pragma warning restore S4200 // Native methods should be wrapped
 
         /// <summary>
         /// Reads up to the <see cref="NewLine"/> value in the input buffer.
         /// </summary>
-        /// <returns>The contents of the input buffer up to the first occurrence of a <see cref="NewLine"/>
-        /// value.</returns>
+        /// <returns>The contents of the input buffer up to the first occurrence of a <see cref="NewLine"/> value.</returns>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended. -or- No bytes
         /// were read.</exception>
-        public string ReadLine()
-        {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
-
-            byte[] singleByte = new byte[1];
-            bool isNewLine = false;
-
-            ArrayList lineText = new();
-
-            byte[] newLineByteArray = Encoding.GetBytes(_newLine);
-
-            DateTime dtTimeout = DateTime.UtcNow.AddMilliseconds(_readTimeout);
-
-            do
-            {
-                if (BytesToRead > 0)
-                {
-                    // Read byte by byte
-                    NativeRead(singleByte, 0, 1);
-                    lineText.Add(singleByte[0]);
-
-                    if (lineText.Count >= newLineByteArray.Length)
-                    {
-                        isNewLine = true;
-
-                        for (int i = 0; i < newLineByteArray.Length; i++)
-                        {
-                            if((byte)lineText[lineText.Count - newLineByteArray.Length + i] != newLineByteArray[i])
-                            {
-                                isNewLine = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if ((DateTime.UtcNow >= dtTimeout) && (_readTimeout != Threading.Timeout.Infinite))
-                {
-                    throw new TimeoutException();
-                }
-            }
-            while (!isNewLine);
-
-            byte[] lineTextBytes = new byte[lineText.Count];
-
-            for(int i =0; i<lineText.Count; i++)
-            {
-                lineTextBytes[i] = (byte)lineText[i];
-            }
-
-            string retReadLine = Encoding.GetString(lineTextBytes, 0, lineTextBytes.Length);
-
-            return retReadLine;
-        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+#pragma warning disable S4200 // OK to make a direct call
+        public extern string ReadLine();
+#pragma warning restore S4200 // Native methods should be wrapped
 
         /// <summary>
         /// Writes a specified number of bytes to the serial port using data from a buffer.
@@ -709,31 +619,10 @@ namespace System.IO.Ports
         /// passed. Either offset or count is less than zero.</exception>
         /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
         /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
-        public void Write(byte[] buffer, int offset, int count)
-        {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (buffer == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if ((offset > buffer.Length) || (count > buffer.Length))
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (offset + count > buffer.Length)
-            {
-                throw new ArgumentException();
-            }
-
-            NativeWrite(buffer, offset, count);
-            NativeStore();
-        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+#pragma warning disable S4200 // OK to make a direct call
+        public extern void Write(byte[] buffer, int offset, int count);
+#pragma warning restore S4200 // Native methods should be wrapped
 
         /// <summary>
         /// Writes the specified string to the serial port.
@@ -742,72 +631,9 @@ namespace System.IO.Ports
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         /// <exception cref="ArgumentNullException">text is null.</exception>
         /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
-        public void Write(string text)
-        {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (text == null)
-            {
-                throw new ArgumentException();
-            }
-
-            if (text.Length == 0)
-            {
-                return;
-            }
-
-            byte[] toSend = Encoding.GetBytes(text);
-
-            NativeWrite(toSend, 0, toSend.Length);
-
-            NativeStore();
-        }
-
-        /// <summary>
-        /// Writes a specified number of characters to the serial port using data from a
-        /// buffer.
-        /// </summary>
-        /// <param name="buffer">The character array that contains the data to write to the port.</param>
-        /// <param name="offset">The zero-based byte offset in the buffer parameter at which to begin copying
-        /// bytes to the port.</param>
-        /// <param name="count">The number of characters to write.</param>
-        /// <exception cref="ArgumentNullException">The buffer passed is null.</exception>
-        /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The offset or count parameters are outside a valid region of the buffer being
-        /// passed. Either offset or count is less than zero.</exception>
-        /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
-        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
-        public void Write(char[] buffer, int offset, int count)
-        {
-            if (!_opened)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (buffer == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if ((offset > buffer.Length) || (count > buffer.Length))
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (offset + count > buffer.Length)
-            {
-                throw new ArgumentException();
-            }
-
-            byte[] toSend = Encoding.GetBytes(new string(buffer, offset, count));
-
-            NativeWrite(toSend, 0, toSend.Length);
-
-            NativeStore();
-        }
+#pragma warning disable S4200 // OK to make a direct call
+        public void Write(string text) => NativeWriteString(text, false);
+#pragma warning restore S4200 // Native methods should be wrapped
 
         /// <summary>
         /// Writes the specified string and the <see cref="NewLine"/> value
@@ -818,7 +644,9 @@ namespace System.IO.Ports
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         /// <exception cref="TimeoutException">The <see cref="WriteLine"/>(System.String) method could not write
         /// to the stream.</exception>
-        public void WriteLine(string text) => Write(text + NewLine);
+#pragma warning disable S4200 // OK to make a direct call
+        public void WriteLine(string text) => NativeWriteString(text, true);
+#pragma warning restore S4200 // Native methods should be wrapped
 
         internal static SerialPort FindDevice(int index)
         {
@@ -897,16 +725,10 @@ namespace System.IO.Ports
         private extern void NativeConfig();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern void NativeWrite(byte[] buffer, int offset, int count);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern uint NativeStore();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern uint NativeRead(byte[] buffer, int offset, int count);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void NativeSetWatchChar();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void NativeWriteString(string text, bool addNewLine);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetDeviceSelector();
