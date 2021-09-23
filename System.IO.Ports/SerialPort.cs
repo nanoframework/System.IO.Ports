@@ -6,6 +6,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Collections;
+using System.Threading;
 
 namespace System.IO.Ports
 {
@@ -15,23 +16,24 @@ namespace System.IO.Ports
     public sealed class SerialPort : IDisposable
     {
         // default new line
+        [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
         private const string _defaultNewLine = "\r";
 
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
         private static readonly SerialDeviceEventListener s_eventListener = new();
 
         private bool _disposed;
 
         // this is used as the lock object 
         // a lock is required because multiple threads can access the SerialPort
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
         private readonly object _syncLock = new();
 
         // flag to signal an open serial port
         private bool _opened;
 
-        private int _writeTimeout = Threading.Timeout.Infinite;
-        private int _readTimeout = Threading.Timeout.Infinite;
+        private int _writeTimeout = Timeout.Infinite;
+        private int _readTimeout = Timeout.Infinite;
         private int _receivedBytesThreshold;
         private int _baudRate;
         private Handshake _handshake = Handshake.None;
@@ -405,7 +407,7 @@ namespace System.IO.Ports
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
         /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to <see cref="InfiniteTimeout"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to <see cref="Timeout"/>.</exception>
         public int ReadTimeout
         {
             get => _readTimeout;
@@ -429,14 +431,14 @@ namespace System.IO.Ports
         /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The <see cref="WriteTimeout"/> value is less than zero and not equal
-        /// to <see cref="InfiniteTimeout"/>.</exception>
+        /// to <see cref="Timeout"/>.</exception>
         public int WriteTimeout
         {
             get => _writeTimeout;
 
             set
             {
-                if ((value < 0) && (value != Threading.Timeout.Infinite))
+                if ((value < 0) && (value != Timeout.Infinite))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -467,7 +469,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets the underlying System.IO.Stream object for a <see cref="SerialPort"/>
+        /// Gets the underlying <see cref="Stream"/> object for a <see cref="SerialPort"/>
         /// object.
         /// </summary>
         /// <exception cref="InvalidOperationException">The stream is closed. This can occur because the <see cref="Open"/>
