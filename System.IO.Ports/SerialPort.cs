@@ -14,11 +14,6 @@ namespace System.IO.Ports
     /// </summary>
     public sealed class SerialPort : IDisposable
     {
-        /// <summary>
-        /// Indicates that no time-out should occur.
-        /// </summary>
-        public const int InfiniteTimeout = -1;
-
         // default new line
         private const string _defaultNewLine = "\r";
 
@@ -35,8 +30,8 @@ namespace System.IO.Ports
         // flag to signal an open serial port
         private bool _opened;
 
-        private int _writeTimeout = InfiniteTimeout;
-        private int _readTimeout = InfiniteTimeout;
+        private int _writeTimeout = Threading.Timeout.Infinite;
+        private int _readTimeout = Threading.Timeout.Infinite;
         private int _receivedBytesThreshold;
         private int _baudRate;
         private Handshake _handshake = Handshake.None;
@@ -443,7 +438,7 @@ namespace System.IO.Ports
 
             set
             {
-                if ((value < 0) && (value != InfiniteTimeout))
+                if ((value < 0) && (value != Threading.Timeout.Infinite))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -706,7 +701,7 @@ namespace System.IO.Ports
                     }
                 }
 
-                if ((DateTime.UtcNow >= dtTimeout) && (_readTimeout != InfiniteTimeout))
+                if ((DateTime.UtcNow >= dtTimeout) && (_readTimeout != Threading.Timeout.Infinite))
                 {
                     throw new TimeoutException();
                 }
