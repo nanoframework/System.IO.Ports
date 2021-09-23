@@ -19,10 +19,8 @@ namespace System.IO.Ports
         /// </summary>
         public const int InfiniteTimeout = -1;
 
-        /// <summary>
-        /// Default new Line, you can change and adjust it in the NewLine property
-        /// </summary>
-        public const string DefaultNewLine = "\r\n";
+        // default new line
+        private const string _defaultNewLine = "\r";
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private static readonly SerialDeviceEventListener s_eventListener = new();
@@ -55,7 +53,7 @@ namespace System.IO.Ports
 
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
-        private string _newLine = DefaultNewLine;
+        private string _newLine = _defaultNewLine;
 
         private Encoding _encoding = Encoding.UTF8;
         /// <summary>
@@ -89,7 +87,7 @@ namespace System.IO.Ports
                 _parity = parity;
                 _dataBits = dataBits;
                 _stopBits = stopBits;
-                _newLine = DefaultNewLine;
+                _newLine = _defaultNewLine;
 
                 // add serial device to collection
                 SerialDeviceController.DeviceCollection.Add(this);
