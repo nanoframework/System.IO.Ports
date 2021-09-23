@@ -344,9 +344,7 @@ namespace System.IO.Ports
 
             get
             {
-                throw new NotSupportedException();
-            }
-        }
+                return _watchChar;
             }
         }
 
