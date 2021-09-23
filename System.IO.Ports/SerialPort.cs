@@ -50,7 +50,6 @@ namespace System.IO.Ports
         private SerialStream _stream;
         private string _newLine = _defaultNewLine;
 
-        private Encoding _encoding = Encoding.UTF8;
         /// <summary>
         /// Initializes a new instance of the <see cref="SerialPort"/> class using the
         /// specified port name, baud rate, parity bit, data bits, and stop bit.
@@ -353,22 +352,21 @@ namespace System.IO.Ports
         /// Gets or sets the byte encoding for pre- and post-transmission conversion of text.
         /// </summary>
         /// <exception cref="ArgumentNullException">The <see cref="Encoding"/> property was set to null.</exception>
-        /// <exception cref="ArgumentException">
-        /// The <see cref="Encoding"/> property was set to an encoding that
-        /// is not <see cref="UTF8Encoding"/>.
+        /// <exception cref="NotSupportedException">
+        /// Setting <see cref="Encoding"/> property is not supported in .NET nanoFramework.
         /// </exception>
         /// <remarks>
-        /// .NET nanoFrameowrk implementation of serial port only supports <see cref="UTF8Encoding"/>.
+        /// .NET nanoFramework implementation of serial port only supports <see cref="UTF8Encoding"/>.
         /// </remarks>
 #pragma warning disable S2292 // can't have this adding a automated backing field
         public Encoding Encoding
 #pragma warning restore S2292 // Trivial properties should be auto-implemented
         {
-            get => _encoding;
+            get => Encoding.UTF8;
 
             set
             {
-                _encoding = value;
+                throw new NotSupportedException();
             }
         }
 
