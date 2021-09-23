@@ -4,8 +4,6 @@
 //
 
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Collections;
 using System.Threading;
 
 namespace System.IO.Ports
@@ -349,26 +347,6 @@ namespace System.IO.Ports
                 throw new NotSupportedException();
             }
         }
-
-        /// <summary>
-        /// Gets or sets the byte encoding for pre- and post-transmission conversion of text.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">The <see cref="Encoding"/> property was set to null.</exception>
-        /// <exception cref="NotSupportedException">
-        /// Setting <see cref="Encoding"/> property is not supported in .NET nanoFramework.
-        /// </exception>
-        /// <remarks>
-        /// .NET nanoFramework implementation of serial port only supports <see cref="UTF8Encoding"/>.
-        /// </remarks>
-#pragma warning disable S2292 // can't have this adding a automated backing field
-        public Encoding Encoding
-#pragma warning restore S2292 // Trivial properties should be auto-implemented
-        {
-            get => Encoding.UTF8;
-
-            set
-            {
-                throw new NotSupportedException();
             }
         }
 
