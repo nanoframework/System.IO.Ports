@@ -48,7 +48,7 @@ namespace System.IO.Ports
 
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
-        private string _newLine = _defaultNewLine;
+        private string _newLine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerialPort"/> class using the
