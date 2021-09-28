@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
+using System.Text;
 using System.Threading;
 
 namespace UnitTestsSerialPort
@@ -138,7 +139,7 @@ namespace UnitTestsSerialPort
             EnsurePortEmpty(_serTwo);
 
             string toSend = $"I ❤ nanoFramework{_serOne.NewLine}";
-            int enc = _serOne.Encoding.GetBytes(toSend).Length;
+            int enc = Encoding.UTF8.GetBytes(toSend).Length;
             // Act
             _serOne.Write(toSend);
             // Wait a bit to have data sent
