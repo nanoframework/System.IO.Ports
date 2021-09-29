@@ -3,9 +3,6 @@
 // See LICENSE file in the project root for full license information.
 //
 
-using System;
-using System.Text;
-
 namespace System.IO.Ports
 {
     internal class SerialStream : Stream
@@ -29,12 +26,14 @@ namespace System.IO.Ports
 
         public override void Flush()
         {
-            _serial.NativeStore();
+            // writing to the stream always sends all the buffer (or times out)
+            // so, there is no real use for this call
+            // adding it just to follow implementation of Stream class
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return (int)_serial.NativeRead(buffer, offset, count);
+            return _serial.Read(buffer, offset, count);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -47,6 +46,7 @@ namespace System.IO.Ports
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         public override void Write(byte[] buffer, int offset, int count)
         {
             _serial.Write(buffer, offset, count);
