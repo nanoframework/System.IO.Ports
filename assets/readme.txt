@@ -6,7 +6,7 @@
                                                                                
 ===================================================================================
 
-API docs: https://docs.nanoframework.net/api
+API docs: https://docs.nanoframework.net/api/System.IO.Ports
 
 Browse our samples repository: https://github.com/nanoframework/System.IO.Ports
 
