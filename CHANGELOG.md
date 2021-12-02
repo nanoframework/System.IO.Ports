@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1-preview.27...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1-preview.29...HEAD)
+
+**Documentation and other chores:**
+
+- Bumps nanoFramework.Runtime.Events from 1.9.2-preview.14 to 1.9.2 [\#41](https://github.com/nanoframework/System.IO.Ports/pull/41)
+
+## [v1.0.1-preview.29](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.1-preview.29) (2021-12-02)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1-preview.27...v1.0.1-preview.29)
 
 **Documentation and other chores:**
 
