@@ -1,6 +1,8 @@
 # Changelog
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1...HEAD)
+## [v1.0.2-preview.3](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.2-preview.3) (2021-12-03)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1...v1.0.2-preview.3)
 
 **Documentation and other chores:**
 
