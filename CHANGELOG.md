@@ -1,5 +1,15 @@
 # Changelog
 
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1...HEAD)
+
+**Documentation and other chores:**
+
+- Update 2 nuget dependencies [\#43](https://github.com/nanoframework/System.IO.Ports/pull/43)
+
+## [v1.0.1](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.1) (2021-12-02)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1-preview.31...v1.0.1)
+
 ## [v1.0.1-preview.31](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.1-preview.31) (2021-12-02)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1-preview.29...v1.0.1-preview.31)
