@@ -1,10 +1,6 @@
-trigger:
-  branches:
-    include: [main, develop, "release-*" ]
-  paths:
-    exclude: [README.md,  CHANGELOG.md, CODE_OF_CONDUCT.md, LICENSE.md, NuGet.Config, .github_changelog_generator, .gitignore]
-  tags:
-    include: ["v*"]
+# Copyright (c) .NET Foundation and Contributors
+# See LICENSE file in the project root for full license information.
+
 trigger:
   branches:
     include:
