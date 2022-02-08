@@ -464,6 +464,26 @@ namespace System.IO.Ports
             get;
         }
 
+        /// <summary>
+        /// Gets or sets the logic level of the RX and TX signals. 
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Trying to set this property when the <see cref="SerialPort"/> is already opened and the driver doesn't support it.</exception>
+        /// <exception cref="NotSupportedException">Trying to set this property on a target that does not support signal inversion.</exception>
+        /// <remarks>
+        /// When the signal levels are not inverted (reads <see langword="false"/>) the RX, TX pins use the standard logic levels (VDD = 1/idle, GND = 0/mark).
+        /// Setting this property to <see langword="true"/>, will invert those signal levels, which will become inverted (VDD = 0/mark, GND= 1/idle).
+        /// Some targets may not support this setting and accessing it will throw a <see cref="NotSupportedException"/> exception.
+        /// This is a .NET nanoFramework property only. Doesn't exist on other .NET platforms.
+        /// </remarks>
+        public extern bool InvertSignalLevels
+        {
+            [MethodImpl(MethodImplOptions.InternalCall)]
+            get;
+
+            [MethodImpl(MethodImplOptions.InternalCall)]
+            set;
+        }
+
         #endregion
 
         /// <summary>
@@ -732,7 +752,7 @@ namespace System.IO.Ports
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetDeviceSelector();
-        
+
         #endregion
     }
 }
