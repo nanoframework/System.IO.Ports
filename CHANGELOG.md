@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.21...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.23...HEAD)
+
+**Implemented enhancements:**
+
+- Implement InvertSignalLevels on SerialPort [\#57](https://github.com/nanoframework/System.IO.Ports/pull/57)
+
+## [v1.0.3-preview.23](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.3-preview.23) (2022-02-05)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.21...v1.0.3-preview.23)
 
 **Documentation and other chores:**
 
