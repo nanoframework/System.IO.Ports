@@ -4,8 +4,7 @@
     <id>nanoFramework.System.IO.Ports</id>
     <version>$version$</version>
     <title>nanoFramework.System.IO.Ports</title>
-    <authors>nanoFramework project contributors</authors>
-    <owners>nanoFramework,dotnetfoundation</owners>
+    <authors>nanoframework</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="file">LICENSE.md</license>
     <releaseNotes>
@@ -22,6 +21,7 @@ This package requires a target with System.IO.Ports v$nativeVersion$ (checksum $
     <dependencies>
       <dependency id="nanoFramework.CoreLibrary" version="1.12.0-preview.9" />
       <dependency id="nanoFramework.Runtime.Events" version="1.10.0-preview.8" />
+      <dependency id="nanoFramework.System.IO.Streams" version="1.0.0-preview.12" />
     </dependencies>
   </metadata>
   <files>
