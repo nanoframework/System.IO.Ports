@@ -4,8 +4,7 @@
     <id>nanoFramework.System.IO.Ports</id>
     <version>$version$</version>
     <title>nanoFramework.System.IO.Ports</title>
-    <authors>nanoFramework project contributors</authors>
-    <owners>nanoFramework,dotnetfoundation</owners>
+    <authors>nanoframework</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="file">LICENSE.md</license>
     <releaseNotes>
