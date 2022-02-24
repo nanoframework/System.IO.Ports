@@ -2,7 +2,19 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.25...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.29...HEAD)
+
+**Implemented enhancements:**
+
+- Add ReadBufferSize and WriteBufferSize [\#62](https://github.com/nanoframework/System.IO.Ports/pull/62)
+
+**Documentation and other chores:**
+
+- Update 1 NuGet dependencies [\#61](https://github.com/nanoframework/System.IO.Ports/pull/61)
+
+## [v1.0.3-preview.29](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.3-preview.29) (2022-02-17)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.25...v1.0.3-preview.29)
 
 **Documentation and other chores:**
 
