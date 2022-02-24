@@ -49,6 +49,7 @@ namespace System.IO.Ports
         private SerialDataReceivedEventHandler _callbacksDataReceivedEvent = null;
         private SerialStream _stream;
         private string _newLine;
+        private int _bufferSize = 256;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerialPort"/> class using the
@@ -101,6 +102,7 @@ namespace System.IO.Ports
         /// <exception cref="InvalidOperationException">The specified port on the current instance of the <see cref="SerialPort"/>.
         /// is already open.</exception>
         /// <exception cref="ArgumentException">One (or more) of the properties set to configure this <see cref="SerialPort"/> are invalid.</exception>
+        /// <exception cref="OutOfMemoryException">Failed to allocate the request amount of memory for the work buffer.</exception>
         public void Open()
         {
             if (!_opened)
@@ -482,6 +484,86 @@ namespace System.IO.Ports
 
             [MethodImpl(MethodImplOptions.InternalCall)]
             set;
+        }
+
+        /// <summary>
+        /// Gets or sets the size of the SerialPort input buffer.
+        /// </summary>
+        /// <value>The size of the input buffer. The default is 256.</value>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ReadBufferSize"/> value is less than or equal to zero.</exception>
+        /// <exception cref="InvalidOperationException">The <see cref="ReadBufferSize"/> property was set while the stream was open.</exception>
+        /// <remarks>
+        /// <para>
+        /// Implementation of this property for .NET nanoFramework it's slightly different from .NET.
+        /// </para>
+        /// <para>
+        /// - There is only one work buffer which is used for transmission and reception.
+        /// </para>
+        /// <para>
+        /// - When the <see cref="SerialPort"/> is <see cref="Open"/> the driver will try to allocate the requested memory for the buffer. On failure to do so, an <see cref="OutOfMemoryException"/> exception will be throw and the <see cref="Open"/> operation will fail.
+        /// </para>
+        /// </remarks>
+        public int ReadBufferSize
+        {
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                if (_opened)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                _bufferSize = value;
+            }
+
+            get
+            {
+                return _bufferSize;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the size of the serial port output buffer.
+        /// </summary>
+        /// <value>The size of the output buffer. The default is 256.</value>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="WriteBufferSize"/> value is less than or equal to zero.</exception>
+        /// <exception cref="InvalidOperationException">The <see cref="WriteBufferSize"/> property was set while the stream was open.</exception>
+        /// <remarks>
+        /// <para>
+        /// Implementation of this property for .NET nanoFramework it's slightly different from .NET.
+        /// </para>
+        /// <para>
+        /// - There is only one work buffer which is used for transmission and reception.
+        /// </para>
+        /// <para>
+        /// - When the <see cref="SerialPort"/> is <see cref="Open"/> the driver will try to allocate the requested memory for the buffer. On failure to do so, an <see cref="OutOfMemoryException"/> exception will be throw and the <see cref="Open"/> operation will fail.
+        /// </para>
+        /// </remarks>
+        public int WriteBufferSize
+        {
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                if (_opened)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                _bufferSize = value;
+            }
+
+            get
+            {
+                return _bufferSize;
+            }
         }
 
         #endregion
