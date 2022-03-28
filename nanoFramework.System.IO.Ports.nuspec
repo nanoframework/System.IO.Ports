@@ -20,8 +20,8 @@ This package requires a target with System.IO.Ports v$nativeVersion$ (checksum $
     <tags>nanoFramework C# csharp netmf netnf System.IO.Ports</tags>
     <dependencies>
       <dependency id="nanoFramework.CoreLibrary" version="1.12.0" />
-      <dependency id="nanoFramework.Runtime.Events" version="1.10.0-preview.15" />
-      <dependency id="nanoFramework.System.IO.Streams" version="1.0.0-preview.22" />
+      <dependency id="nanoFramework.Runtime.Events" version="1.10.0" />
+      <dependency id="nanoFramework.System.IO.Streams" version="1.0.0-preview.24" />
     </dependencies>
   </metadata>
   <files>
