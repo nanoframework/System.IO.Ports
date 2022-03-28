@@ -36,6 +36,11 @@ namespace System.IO.Ports
             return _serial.Read(buffer, offset, count);
         }
 
+        public override int Read(SpanByte buffer)
+        {
+            throw new NotImplementedException();
+        }
+
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotSupportedException();
