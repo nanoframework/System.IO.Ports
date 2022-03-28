@@ -1,6 +1,6 @@
 # Changelog
 
-## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
+## [v1.0.2-preview.3](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.2-preview.3) (2021-12-03)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.44...HEAD)
 
