@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.4](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.4) (2022-03-29)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.4-preview.3...v1.0.4)
+
 ## [v1.0.4-preview.3](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.4-preview.3) (2022-03-29)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3...v1.0.4-preview.3)
