@@ -10,8 +10,7 @@
 
 | Component | Build Status | NuGet Package |
 |:-|---|---|
-| System.IO.Ports | [![Build Status](https://dev.azure.com/nanoframework/System.IO.Ports/_apis/build/status/nanoframework.System.IO.Ports?repoName=nanoframework%2FSystem.IO.Ports&branchName=main)](https://dev.azure.com/nanoframework/System.IO.Ports/_build/latest?definitionId=74&repoName=nanoframework%2FSystem.IO.Ports&branchName=main) | [![NuGet](https://img.shields.io/nuget/v/nanoFramework.System.IO.Ports.svg?label=NuGet&style=flat&logo=nuget)](https://www.nuget.org/packages/nanoFramework.System.IO.Ports/) |
-| System.IO.Ports (preview) | [![Build Status](https://dev.azure.com/nanoframework/System.IO.Ports/_apis/build/status/nanoframework.System.IO.Ports?repoName=nanoframework%2FSystem.IO.Ports&branchName=develop)](https://dev.azure.com/nanoframework/System.IO.Ports/_build/latest?definitionId=74&repoName=nanoframework%2FSystem.IO.Ports&branchName=develop) | [![NuGet](https://img.shields.io/nuget/vpre/nanoFramework.System.IO.Ports.svg?label=NuGet&style=flat&logo=nuget)](https://www.nuget.org/packages/nanoFramework.System.IO.Ports/) |
+| System.IO.Ports | [![Build Status](https://dev.azure.com/nanoframework/System.IO.Ports/_apis/build/status/System.IO.Ports?repoName=nanoframework%2FSystem.IO.Ports&branchName=main)](https://dev.azure.com/nanoframework/System.IO.Ports/_build/latest?definitionId=74&repoName=nanoframework%2FSystem.IO.Ports&branchName=main) | [![NuGet](https://img.shields.io/nuget/v/nanoFramework.System.IO.Ports.svg?label=NuGet&style=flat&logo=nuget)](https://www.nuget.org/packages/nanoFramework.System.IO.Ports/) |
 
 ## Usage
 
