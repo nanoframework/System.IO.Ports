@@ -129,7 +129,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 
 #### Case of WatchChar
 
-.NET nanoFramework has a specific API to watch for a specific character if present at the end of the transmission.
+.NET nanoFramework has a specific API to watch for a specific character if present during the transmission.
 
 ```csharp
     port.WatchChar = '\r';
