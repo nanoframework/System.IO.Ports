@@ -140,7 +140,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 {
     if (e.EventType == SerialData.WatchChar)
     {
-        // We have our special character at the end of the transmission
+        // We have our special character during the transmission and read was cut short
     }
 }
 ```
