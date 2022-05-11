@@ -11,12 +11,12 @@ namespace System.IO.Ports
     public enum SerialData
     {
         /// <summary>
-        /// A character was received and placed in the input buffer.
+        /// A character was received in the input buffer.
         /// </summary>
         Chars = 1,
 
         /// <summary>
-        ///  The end of file character was received and placed in the input buffer.
+        ///  The character to watch was received in the input buffer.
         /// </summary>
         WatchChar = 2
     }
