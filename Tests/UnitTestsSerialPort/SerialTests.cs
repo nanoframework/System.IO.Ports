@@ -102,7 +102,7 @@ namespace UnitTestsSerialPort
             _serOne.ReadTimeout = 1000;
             _serTwo.WriteTimeout = 1000;
             _serTwo.ReadTimeout = 1000;
-            string toSend = "This is a simple test for verifying the default readline character\\r\\n";
+            string toSend = "This is a simple test for verifying the default readline character \r\n \\r";
             // Act
             _serOne.Write(toSend);
             string toReceive = _serTwo.ReadLine();
