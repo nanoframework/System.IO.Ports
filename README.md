@@ -140,7 +140,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 {
     if (e.EventType == SerialData.WatchChar)
     {
-        // We have our special character during the transmission and interupt was raised,
+        // We have our special character during the transmission and an event was raised,
         // the rest of the buffer is still being read.
     }
 }
