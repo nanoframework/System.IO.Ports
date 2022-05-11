@@ -94,6 +94,23 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
+        public void VerifyDefaultReadLineCharacter()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            string toSend = "This is a simple test for verifying the default readline character\\r\\n";
+            // Act
+            _serOne.Write(toSend);
+            string toReceive = _serTwo.ReadLine();
+            // Assert
+            Assert.Equal(toSend, toReceive + "\\r" + _serOne.NewLine);
+        }
+
+        [TestMethod]
         public void WriteAndReadStringTests()
         {
             // Arrange
