@@ -94,11 +94,11 @@ You can as well write and read strings:
 string toSend = "I ❤ nanoFramework";
 port.WriteLine(toSend);
 // this will send the string encoded finishing by a new line, by default \r\n
-// You can change the new line by anything:
+// You can change the new line to be anything:
 port.NewLine = "❤❤";
 // Now it will send the 2 hearts as the end of line while operating a ReadLine or WriteLine
 // You can ad anytime change it back:
-port.NewLine = SerialPort.DefaultNewLine; // default is "\r\n"
+port.NewLine = SerialPort.DefaultNewLine; // default is "\n"
 // This will read the existing buffer:
 string existingString = port.ReadExisting();
 // Note that if it can't properly convert the bytes to a string, you'll get an exception
@@ -129,7 +129,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 
 #### Case of WatchChar
 
-.NET nanoFramework has a specific API to watch for a specific character if present during the transmission.
+.NET nanoFramework has a custom API event to watch for a specific character if present during the transmission.
 
 ```csharp
     port.WatchChar = '\r';
@@ -140,8 +140,8 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 {
     if (e.EventType == SerialData.WatchChar)
     {
-        // We have our special character during the transmission and an event was raised,
-        // the rest of the buffer is still being read.
+        // A specified character was received during the transmission and a notification event was raised.
+        // The rest of the buffer is still being received in the background, so might not be the end of transmission when reading the stream.
     }
 }
 ```
