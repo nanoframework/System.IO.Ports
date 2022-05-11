@@ -326,7 +326,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestWatchCharEvents()
+        public void TestWatchCharEventsWhenSetWhilstOpen()
         {
             // Arrange
             EnsurePortsOpen();
@@ -338,6 +338,31 @@ namespace UnitTestsSerialPort
             EnsurePortEmpty(_serTwo);
             _serTwo.DataReceived += DataReceivedWatchChar;
             _serTwo.WatchChar = '\r';
+            string toSendWithWatchChar = "This is a test\r";
+            // Act
+            _serOne.Write(toSendWithWatchChar);
+            Thread.Sleep(200);
+            _serTwo.DataReceived -= DataReceivedWatchChar;
+        }
+
+        [TestMethod]
+        public void TestWatchCharEventsWhenSetWhilstClosed()
+        {
+            // Arrange
+            EnsurePortsOpen();
+            _serOne.WriteTimeout = 1000;
+            _serOne.ReadTimeout = 1000;
+            _serTwo.WriteTimeout = 1000;
+            _serTwo.ReadTimeout = 1000;
+            EnsurePortEmpty(_serOne);
+            _serTwo.DataReceived += DataReceivedWatchChar;
+            if (_serTwo.IsOpen)
+            {
+                _serTwo.Close();
+            }
+            _serTwo.WatchChar = '\r';
+            _serTwo.Open();
+            EnsurePortEmpty(_serTwo);
             string toSendWithWatchChar = "This is a test\r";
             // Act
             _serOne.Write(toSendWithWatchChar);

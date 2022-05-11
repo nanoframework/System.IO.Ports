@@ -116,6 +116,11 @@ namespace System.IO.Ports
 
                 _stream = new SerialStream(this);
 
+                if (_watchChar != null)
+                {
+                    NativeSetWatchChar();
+                }
+
                 _opened = true;
             }
             else
