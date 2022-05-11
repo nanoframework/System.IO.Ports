@@ -94,11 +94,11 @@ You can as well write and read strings:
 string toSend = "I ❤ nanoFramework";
 port.WriteLine(toSend);
 // this will send the string encoded finishing by a new line, by default \r\n
-// You can change the new line to be anything:
+// You can change the new line by anything:
 port.NewLine = "❤❤";
 // Now it will send the 2 hearts as the end of line while operating a ReadLine or WriteLine
 // You can ad anytime change it back:
-port.NewLine = SerialPort.DefaultNewLine; // default is "\n"
+port.NewLine = SerialPort.DefaultNewLine; // default is "\r\n"
 // This will read the existing buffer:
 string existingString = port.ReadExisting();
 // Note that if it can't properly convert the bytes to a string, you'll get an exception
