@@ -96,7 +96,7 @@ port.WriteLine(toSend);
 // this will send the string encoded finishing by a new line, by default `\n`
 // You can change the new line to be anything:
 port.NewLine = "❤❤";
-// Now it will send use 2 hearts as the line ending for `ReadLine` or `WriteLine`
+// Now it will send 2 hearts as the line ending `WriteLine` and will use 2 hearts as the terminator for `ReadLine`.
 // You can change it back to the `\n` default at anytime:
 port.NewLine = SerialPort.DefaultNewLine; // default is "\n"
 // This will read the existing buffer:
