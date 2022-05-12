@@ -51,7 +51,7 @@ Note: some MCU do not support Handshake or specific bit parity even if you can s
 
 ### Opening and Closing the port
 
-The Serial Port can only operate once open and will finish the operations when closed. If you dispose the SerialPort, it will close it before some operations may have completed.
+The `SerialPort` can only operate once open and will finish the operations when closed. When disposed, the `SerialPort` will perform the close operation regardless of any ongoing receive or transmit operations.
 
 ```csharp
 var port = new SerialPort("COM2");
