@@ -140,8 +140,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 {
     if (e.EventType == SerialData.WatchChar)
     {
-        // A specified character was received during the transmission and a notification event was raised.
-        // The rest of the buffer is still being received in the background, so might not be the end of transmission when reading the stream.
+        // The specified character was detected when reading from the seriaport.
     }
 }
 ```
