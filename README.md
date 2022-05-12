@@ -93,12 +93,12 @@ You can as well write and read strings:
 ```csharp
 string toSend = "I ❤ nanoFramework";
 port.WriteLine(toSend);
-// this will send the string encoded finishing by a new line, by default \r\n
-// You can change the new line by anything:
+// this will send the string encoded finishing by a new line, by default `\n`
+// You can change the new line to be anything:
 port.NewLine = "❤❤";
-// Now it will send the 2 hearts as the end of line while operating a ReadLine or WriteLine
-// You can ad anytime change it back:
-port.NewLine = SerialPort.DefaultNewLine; // default is "\r\n"
+// Now it will send 2 hearts as the line ending `WriteLine` and will use 2 hearts as the terminator for `ReadLine`.
+// You can change it back to the `\n` default at anytime:
+port.NewLine = SerialPort.DefaultNewLine; // default is "\n"
 // This will read the existing buffer:
 string existingString = port.ReadExisting();
 // Note that if it can't properly convert the bytes to a string, you'll get an exception
