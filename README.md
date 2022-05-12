@@ -63,7 +63,7 @@ port.Close();
 ### Read and Write
 
 You have multiple functions to read and write, some are byte related, others string related. 
-Note that string functions will use the ASCII `Encoding` charset.
+Note that string functions will use UTF8 `Encoding` charset.
 
 #### Sending and receiving bytes
 
@@ -111,6 +111,7 @@ string aFullLine = port.ReadLine();
 ### Events
 
 #### Character
+
 SerialPort supports events when characters are received.
 
 ```csharp
@@ -130,6 +131,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 ```
 
 #### WatchChar
+
 .NET nanoFramework has a specific API to watch for a specific character if present at the end of the transmission.
 
 ```csharp
