@@ -15,7 +15,7 @@ namespace System.IO.Ports
     {
         // default new line
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private const string _defaultNewLine = "\r";
+        private const string _defaultNewLine = "\n";
 
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
         private static readonly SerialDeviceEventListener s_eventListener = new();
