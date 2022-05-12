@@ -20,11 +20,6 @@ namespace System.IO.Ports
         /// </summary>
         Chars = 1,
 
-        // /// <summary>
-        // /// The end of file character was received and placed in the input buffer.
-        // /// </summary>
-        // Eof	= 2,
-
         /// <summary>
         ///  The `watch` character was received and placed in the input buffer.
         /// </summary>
