@@ -144,7 +144,7 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 {
     if (e.EventType == SerialData.WatchChar)
     {
-        // The specified character was detected when reading from the seriaport.
+        // The specified character was detected when reading from the serialaport.
     }
 }
 ```
