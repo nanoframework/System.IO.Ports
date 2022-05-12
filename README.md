@@ -26,32 +26,32 @@ var port = new SerialPort("COM2");
 
 Note that the port name **must** be `COMx` where x is a number. 
 
-The GetPortNames method will gi you a list of available ports:
+The `GetPortNames` method will give you a list of available ports:
 
 ```csharp
 var ports = SerialPort.GetPortNames();
 ```
 
-You can as well directly specify the baud rate and other elements in the constructor:
+You can also directly specify the baud rate and other elements in the constructor:
 
 ```csharp
 var port = new SerialPort("COM2", 115200);
 ```
 
-Each property can be adjusted, including while the port is open. Be aware that this can generate hazardous behaviors. It is always recommended to change the properties once the port is closed.
+Each property can be adjusted, including when the port is open. Be aware that this can generate hazardous behaviors. It is always recommended to change the properties while the port is closed.
 
-**Important**: you should setup a timeout for the read and write operations. If you have none, while operating a read or a write, you will wait indefinitely to read or write that everything is received or sent.
+**Important**: You should setup a timeout for the read and write operations. If you have none, read or a write periods may cause theads to be locked for indefinite periods.
 
 ```csharp
 port.WriteTimeout = 1000;
 port.ReadTimeout = 1000;
 ```
 
-Note: some MCU do not support Hankshake or specific bit parity even if you can set them up in the constructor.
+Note: some MCU do not support Handshake or specific bit parity even if you can set them up in the constructor.
 
 ### Opening and Closing the port
 
-The port can only be in operation once open and will finish his operations when closed. If you dispose the SerialPort, it will close it before.
+The `SerialPort` can only operate once open and will finish the operations when closed. When disposed, the `SerialPort` will perform the close operation regardless of any ongoing receive or transmit operations.
 
 ```csharp
 var port = new SerialPort("COM2");
@@ -62,7 +62,8 @@ port.Close();
 
 ### Read and Write
 
-You have multiple functions to read and write, some are byte related, others string related. Note that the string one will use the `Enconding` charset that you will define. By default, this is UTF8.
+You have multiple functions to read and write, some are byte related, others string related. 
+Note that string functions will use UTF8 `Encoding` charset.
 
 #### Sending and receiving bytes
 
@@ -88,7 +89,7 @@ byte oneByte = port.ReadByte();
 
 #### Sending and receiving string
 
-You can as well write and read strings:
+Example:
 
 ```csharp
 string toSend = "I ❤ nanoFramework";
@@ -109,6 +110,8 @@ string aFullLine = port.ReadLine();
 
 ### Events
 
+#### Character
+
 SerialPort supports events when characters are received.
 
 ```csharp
@@ -127,7 +130,8 @@ private void DataReceivedNormalEvent(object sender, SerialDataReceivedEventArgs 
 }
 ```
 
-#### Case of WatchChar
+#### WatchChar
+
 
 .NET nanoFramework has a specific API to watch for a specific character if present at the end of the transmission.
 
