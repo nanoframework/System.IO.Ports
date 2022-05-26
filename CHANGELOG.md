@@ -1,5 +1,22 @@
 # Changelog
 
+## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.4...HEAD)
+
+**Implemented enhancements:**
+
+- Add WriteByte to SerialPort [\#86](https://github.com/nanoframework/System.IO.Ports/pull/86)
+- Align default newline with .NET [\#84](https://github.com/nanoframework/System.IO.Ports/pull/84)
+
+**Documentation and other chores:**
+
+- Improve Readme [\#85](https://github.com/nanoframework/System.IO.Ports/pull/85)
+- Improve intellisense comment for watchchar event [\#83](https://github.com/nanoframework/System.IO.Ports/pull/83)
+- Update 1 NuGet dependencies [\#82](https://github.com/nanoframework/System.IO.Ports/pull/82)
+- Update 1 NuGet dependencies [\#81](https://github.com/nanoframework/System.IO.Ports/pull/81)
+- release-v1.0.4 [\#77](https://github.com/nanoframework/System.IO.Ports/pull/77)
+
 ## [v1.0.4](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.4) (2022-03-29)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.4-preview.3...v1.0.4)
@@ -15,6 +32,10 @@
 ## [v1.0.3](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.3) (2022-03-28)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.3-preview.46...v1.0.3)
+
+**Documentation and other chores:**
+
+- release-v1.0.3 [\#75](https://github.com/nanoframework/System.IO.Ports/pull/75)
 
 ## [v1.0.3-preview.46](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.3-preview.46) (2022-03-28)
 
@@ -186,6 +207,10 @@
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.2-preview.3...v1.0.2)
 
+**Documentation and other chores:**
+
+- release-v1.0.2 [\#44](https://github.com/nanoframework/System.IO.Ports/pull/44)
+
 ## [v1.0.2-preview.3](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.2-preview.3) (2021-12-03)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1...v1.0.2-preview.3)
@@ -197,6 +222,10 @@
 ## [v1.0.1](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.1) (2021-12-02)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.1-preview.31...v1.0.1)
+
+**Documentation and other chores:**
+
+- release-v1.0.1 [\#42](https://github.com/nanoframework/System.IO.Ports/pull/42)
 
 ## [v1.0.1-preview.31](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.1-preview.31) (2021-12-02)
 
@@ -299,6 +328,10 @@
 ## [v1.0.0](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.0) (2021-07-16)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.0-preview.54...v1.0.0)
+
+**Documentation and other chores:**
+
+- release-v1.0.0 [\#25](https://github.com/nanoframework/System.IO.Ports/pull/25)
 
 ## [v1.0.0-preview.54](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.0-preview.54) (2021-07-16)
 
