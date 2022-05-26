@@ -32,7 +32,8 @@ namespace System.IO.Ports
 
         private int _writeTimeout = Timeout.Infinite;
         private int _readTimeout = Timeout.Infinite;
-        private int _receivedBytesThreshold;
+        // default threshold is 1
+        private int _receivedBytesThreshold = 1;
         private int _baudRate;
         private Handshake _handshake = Handshake.None;
         private StopBits _stopBits;
@@ -429,6 +430,7 @@ namespace System.IO.Ports
         /// Gets or sets the number of bytes in the internal input buffer before a <see cref="DataReceived"/>
         /// event occurs.
         /// </summary>
+        /// <value>The number of bytes in the internal input buffer before a <see cref="DataReceived"/> event is fired. The default is 1.</value>
         /// <exception cref="ArgumentOutOfRangeException">The <see cref="ReceivedBytesThreshold"/> value is less than or equal
         /// to zero.</exception>
         public int ReceivedBytesThreshold
@@ -437,12 +439,7 @@ namespace System.IO.Ports
 
             set
             {
-                if (value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-
-                _receivedBytesThreshold = value;
+                NativeReceivedBytesThreshold(value);
             }
         }
 
@@ -848,6 +845,9 @@ namespace System.IO.Ports
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetDeviceSelector();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void NativeReceivedBytesThreshold(int value);
 
         #endregion
     }
