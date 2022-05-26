@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.4...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.6.1...HEAD)
+
+**Fixed bugs:**
+
+- Fix ReceivedBytesThreshold [\#87](https://github.com/nanoframework/System.IO.Ports/pull/87)
+
+## [v1.0.6.1](https://github.com/nanoframework/System.IO.Ports/tree/v1.0.6.1) (2022-05-26)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.0.4...v1.0.6.1)
 
 **Implemented enhancements:**
 
