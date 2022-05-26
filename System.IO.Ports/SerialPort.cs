@@ -727,6 +727,20 @@ namespace System.IO.Ports
 #pragma warning restore S4200 // Native methods should be wrapped
 
         /// <summary>
+        /// Writes a byte to the serial port.
+        /// </summary>
+        /// <param name="value">The byte to write to the port.</param>
+        /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
+        /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
+        public void WriteByte(byte value)
+        {
+            Write(
+                new byte[] { value },
+                0,
+                1);
+        }
+
+        /// <summary>
         /// Writes the specified string to the serial port.
         /// </summary>
         /// <param name="text">The string for output.</param>
