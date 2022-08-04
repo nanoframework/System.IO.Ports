@@ -50,6 +50,12 @@ steps:
   parameters:
     sonarCloudProject: 'nanoframework_System.IO.Ports'
 
+# update dependents
+- template: azure-pipelines-templates/update-dependents.yml@templates  
+  parameters:
+    repositoriesToUpdate: |
+      nanoframework/nanoFramework.Logging
+
 # step from template @ nf-tools repo
 # report error
 - template: azure-pipelines-templates/discord-webhook-task.yml@templates  
