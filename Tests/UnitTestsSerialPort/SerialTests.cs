@@ -41,8 +41,8 @@ namespace UnitTestsSerialPort
                 OutputHelper.WriteLine("You will need to connect:");
                 OutputHelper.WriteLine("  COM2 RX  <-> COM3 TX");
                 OutputHelper.WriteLine("  COM2 TX  <-> COM3 RX");
-                OutputHelper.WriteLine("  COM2 RTS <-> COM3 CTS");
-                OutputHelper.WriteLine("  COM2 CTS <-> COM3 RTS");
+                OutputHelper.WriteLine("  COM2 RTS <-> COM3 CTS"); // TODO: Optional?!
+                OutputHelper.WriteLine("  COM2 CTS <-> COM3 RTS"); // TODO: Optional?!
                 _serOne = new SerialPort("COM2");
                 _serTwo = new SerialPort("COM3");
                 OutputHelper.WriteLine("SerialPorts created, trying to open them");
@@ -95,7 +95,7 @@ namespace UnitTestsSerialPort
         //}
 
         [TestMethod]
-        public void GetPortNamesTest()
+        public void GetAllAvailableSerialPortNames()
         {
             var ports = SerialPort.GetPortNames();
             OutputHelper.WriteLine("Available SerialPorts:");
@@ -106,7 +106,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void BasicReadWriteTests()
+        public void WriteAndReadFourBytes()
         {
             // Arrange
             EnsurePortsOpen();
@@ -146,7 +146,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void WriteAndReadStringTests()
+        public void WriteAndReadSimpleAsciiString_37Chars()
         {
             // Arrange
             EnsurePortsOpen();
@@ -163,7 +163,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void ReadMultipleLinesTests()
+        public void WriteAndReadMultipleLineAsciiString()
         {
             // Arrange
             EnsurePortsOpen();
@@ -184,7 +184,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void CheckReadByteSize()
+        public void CheckReadByteSizeUtf8String()
         {
             // Arrange
             EnsurePortsOpen();
@@ -223,7 +223,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void CheckReadTimeoutTest()
+        public void CheckReadTimeout()
         {
             Assert.Throws(typeof(TimeoutException), () =>
             {
@@ -239,7 +239,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void ReadByteWriteByteTests()
+        public void WriteThreeBytesReadSingleByte()
         {
             // Arrange
             EnsurePortsOpen();
@@ -262,7 +262,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void CheckBytesAvailableTest()
+        public void CheckBytesAreAvailable()
         {
             // Arrange
             EnsurePortsOpen();
@@ -301,7 +301,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void AdjustBaudRateTests()
+        public void AdjustBaudRateTo115200()
         {
             // Arrange
             _serOne.BaudRate = 115200;
@@ -311,7 +311,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void AdjustHandshakeTests()
+        public void AdjustHandshakeRTS()
         {
             // Arrange
             _serOne.Handshake = Handshake.RequestToSend;
@@ -324,7 +324,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestStreams()
+        public void StreamsCanWriteRead()
         {
             // Arrange
             EnsurePortsOpen();
@@ -350,7 +350,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestEvents()
+        public void DataReceivedEventsAreGenerated()
         {
             // Arrange
             EnsurePortsOpen();
@@ -378,7 +378,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestWatchCharEvents()
+        public void WatchCharEventsAreGenerated()
         {
             // Arrange
             EnsurePortsOpen();
@@ -423,7 +423,7 @@ namespace UnitTestsSerialPort
         }
 
         [Cleanup]
-        public void CleanPorts()
+        public void DisposeSerialPorts()
         {
             EnsurePortsClosed();
             _serOne.Dispose();
