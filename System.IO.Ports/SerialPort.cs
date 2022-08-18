@@ -352,8 +352,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets a value indicating whether the open or closed status of the <see cref="SerialPort"/>
-        /// object.
+        /// Gets a value indicating whether the <see cref="SerialPort"/> is open or closed.
         /// </summary>
         /// <exception cref="ArgumentNullException">The <see cref="IsOpen"/> value passed is null.</exception>
         /// <exception cref="ArgumentException">The <see cref="IsOpen"/> value passed is an empty string ("").</exception>
