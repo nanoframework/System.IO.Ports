@@ -3,7 +3,7 @@
 // See LICENSE file in the project root for full license information.
 //
 
-using nanoFramework.Hardware.Esp32;
+using nanoFramework.Hardware.Esp32; // TODO: only include if platform needs it?!
 using nanoFramework.TestFramework;
 using System;
 using System.Diagnostics;
@@ -20,12 +20,14 @@ namespace UnitTestsSerialPort
         static SerialPort _serOne;
         static SerialPort _serTwo;
 
+        // TODO: only include if platform needs it?!
         [Setup]
-        public void SetupComPorts()
+        public void SetupComPorts_ESP32()
         {
+            OutputHelper.WriteLine("Setting up tests for an ESP32...");
             try
             {
-                Debug.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
+                OutputHelper.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
                 Configuration.SetPinFunction(32, DeviceFunction.COM2_RX);
                 Configuration.SetPinFunction(33, DeviceFunction.COM2_TX);
                 Configuration.SetPinFunction(12, DeviceFunction.COM2_RTS);
@@ -36,22 +38,23 @@ namespace UnitTestsSerialPort
                 Configuration.SetPinFunction(27, DeviceFunction.COM3_RTS);
                 Configuration.SetPinFunction(14, DeviceFunction.COM3_CTS);
 
-                Debug.WriteLine("You will need to connect:");
-                Debug.WriteLine("  COM2 RX  <-> COM3 TX");
-                Debug.WriteLine("  COM2 TX  <-> COM3 RX");
-                Debug.WriteLine("  COM2 RTS <-> COM3 CTS");
-                Debug.WriteLine("  COM2 CTS <-> COM3 RTS");
+                OutputHelper.WriteLine("You will need to connect:");
+                OutputHelper.WriteLine("  COM2 RX  <-> COM3 TX");
+                OutputHelper.WriteLine("  COM2 TX  <-> COM3 RX");
+                OutputHelper.WriteLine("  COM2 RTS <-> COM3 CTS");
+                OutputHelper.WriteLine("  COM2 CTS <-> COM3 RTS");
                 _serOne = new SerialPort("COM2");
                 _serTwo = new SerialPort("COM3");
-                Debug.WriteLine("Devices created, trying to open them");
+                OutputHelper.WriteLine("SerialPorts created, trying to open them");
                 _serOne.Open();
-                Debug.WriteLine("Serial One COM2 opened");
+                OutputHelper.WriteLine("SerialPort One COM2 opened.");
                 _serTwo.Open();
-                Debug.WriteLine("Devices opened, will close them");
-                // Wait a bit just to make sure and close them again
+                OutputHelper.WriteLine("SerialPort Two COM3 opened.");
+                OutputHelper.WriteLine("All SerialPorts opened, will close them");
+                // Wait a bit just to make sure and close them all
                 Thread.Sleep(100);
-                _serOne.Close();
-                _serTwo.Close();
+                EnsurePortsClosed();
+                OutputHelper.WriteLine("SerialPorts Closed.");
             }
             catch
             {
@@ -59,14 +62,46 @@ namespace UnitTestsSerialPort
             }
         }
 
+        //[Setup]
+        //public void SetupComPorts_ChibOs_STM32F769I_Disco()
+        //{
+        //    OutputHelper.WriteLine("Setting up tests for an STM32F769I...");
+        //    try
+        //    {
+        //        Debug.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
+
+        //        OutputHelper.WriteLine("You will need to connect:");
+        //        OutputHelper.WriteLine("  COM5 (PD2) RX  <-> COM6 (PC6) TX");
+        //        OutputHelper.WriteLine("  COM5 (PC12) TX  <-> COM6 (PC7) RX");
+        //        // OutputHelper.WriteLine("  COM5 RTS <-> COM6 CTS");
+        //        // OutputHelper.WriteLine("  COM5 CTS <-> COM6 RTS");
+        //        _serOne = new SerialPort("COM5");
+        //        _serTwo = new SerialPort("COM6");
+        //        OutputHelper.WriteLine("SerialPorts created, trying to open them");
+        //        _serOne.Open();
+        //        OutputHelper.WriteLine("SerialPort One COM5 opened");
+        //        _serTwo.Open();
+        //        OutputHelper.WriteLine("SerialPort Two COM6 opened");
+        //        OutputHelper.WriteLine("SarialPorts opened, will close them");
+        //        // Wait a bit just to make sure and close them all
+        //        Thread.Sleep(100);
+        //        EnsurePortsClosed();
+        //        OutputHelper.WriteLine("SerialPorts Closed.");
+        //    }
+        //    catch
+        //    {
+        //        Assert.SkipTest("Serial Ports not supported in this platform or not properly configured");
+        //    }
+        //}
+
         [TestMethod]
         public void GetPortNamesTest()
         {
             var ports = SerialPort.GetPortNames();
-            Debug.WriteLine("Available ports:");
+            OutputHelper.WriteLine("Available SerialPorts:");
             foreach (string port in ports)
             {
-                Debug.WriteLine($"  {port}");
+                OutputHelper.WriteLine($"  {port}");
             }
         }
 

@@ -783,7 +783,7 @@ namespace System.IO.Ports
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
         /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
-        protected void Dispose(bool disposing)
+        internal void Dispose(bool disposing)
         {
             if (!_disposed)
             {
