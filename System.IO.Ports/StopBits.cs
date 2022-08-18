@@ -24,5 +24,5 @@ namespace System.IO.Ports
         /// 1.5 stop bits are used.
         /// </summary>
         OnePointFive = 3
-    };
+    }
 }

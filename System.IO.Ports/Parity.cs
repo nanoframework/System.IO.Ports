@@ -23,6 +23,6 @@ namespace System.IO.Ports
         /// <summary>
         /// Sets the parity bit so that the count of bits set is an even number.
         /// </summary>
-        Even = 2,
-    };
+        Even = 2
+    }
 }

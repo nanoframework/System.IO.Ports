@@ -37,5 +37,5 @@ namespace System.IO.Ports
         /// are used.
         /// </summary>
         RequestToSendXOnXOff
-    };
+    }
 }
