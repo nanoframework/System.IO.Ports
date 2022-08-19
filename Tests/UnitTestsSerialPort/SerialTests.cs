@@ -3,7 +3,7 @@
 // See LICENSE file in the project root for full license information.
 //
 
-using nanoFramework.Hardware.Esp32; // TODO: only include if platform needs it?!
+using nanoFramework.Hardware.Esp32;
 using nanoFramework.TestFramework;
 using System;
 using System.Diagnostics;
@@ -20,9 +20,8 @@ namespace UnitTestsSerialPort
         static SerialPort _serOne;
         static SerialPort _serTwo;
 
-        // TODO: only include if platform needs it?!
         [Setup]
-        public void SetupComPorts_ESP32()
+        public void SetupComPorts()
         {
             OutputHelper.WriteLine("Setting up tests for an ESP32...");
             try
@@ -61,38 +60,6 @@ namespace UnitTestsSerialPort
                 Assert.SkipTest("Serial Ports not supported in this platform or not properly configured");
             }
         }
-
-        //[Setup]
-        //public void SetupComPorts_ChibOs_STM32F769I_Disco()
-        //{
-        //    OutputHelper.WriteLine("Setting up tests for an STM32F769I...");
-        //    try
-        //    {
-        //        Debug.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
-
-        //        OutputHelper.WriteLine("You will need to connect:");
-        //        OutputHelper.WriteLine("  COM5 (PD2) RX  <-> COM6 (PC6) TX");
-        //        OutputHelper.WriteLine("  COM5 (PC12) TX  <-> COM6 (PC7) RX");
-        //        // OutputHelper.WriteLine("  COM5 RTS <-> COM6 CTS");
-        //        // OutputHelper.WriteLine("  COM5 CTS <-> COM6 RTS");
-        //        _serOne = new SerialPort("COM5");
-        //        _serTwo = new SerialPort("COM6");
-        //        OutputHelper.WriteLine("SerialPorts created, trying to open them");
-        //        _serOne.Open();
-        //        OutputHelper.WriteLine("SerialPort One COM5 opened");
-        //        _serTwo.Open();
-        //        OutputHelper.WriteLine("SerialPort Two COM6 opened");
-        //        OutputHelper.WriteLine("SarialPorts opened, will close them");
-        //        // Wait a bit just to make sure and close them all
-        //        Thread.Sleep(100);
-        //        EnsurePortsClosed();
-        //        OutputHelper.WriteLine("SerialPorts Closed.");
-        //    }
-        //    catch
-        //    {
-        //        Assert.SkipTest("Serial Ports not supported in this platform or not properly configured");
-        //    }
-        //}
 
         [TestMethod]
         public void GetPortNamesTest()
