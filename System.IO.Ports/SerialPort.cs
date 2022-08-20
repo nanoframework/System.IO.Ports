@@ -1,7 +1,5 @@
-﻿//
-// Copyright (c) .NET Foundation and Contributors
+﻿// Copyright (c) .NET Foundation and Contributors
 // See LICENSE file in the project root for full license information.
-//
 
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -32,6 +30,7 @@ namespace System.IO.Ports
 
         private int _writeTimeout = Timeout.Infinite;
         private int _readTimeout = Timeout.Infinite;
+
         // default threshold is 1
         private int _receivedBytesThreshold = 1;
         private int _baudRate;
@@ -187,7 +186,6 @@ namespace System.IO.Ports
             }
         }
 
-        //
         /// <summary>
         /// Gets or sets the handshaking protocol for serial port transmission of data using
         /// a value from <see cref="Ports.Handshake"/>.
@@ -269,7 +267,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets or sets the Serial Mode
+        /// Gets or sets the Serial Mode.
         /// </summary>
         /// <remarks>This is a .NET nanoFramework property only.</remarks>
         public SerialMode Mode
@@ -352,8 +350,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets a value indicating the open or closed status of the <see cref="SerialPort"/>
-        /// object.
+        /// Gets a value indicating whether the <see cref="SerialPort"/> is open or closed.
         /// </summary>
         /// <exception cref="ArgumentNullException">The <see cref="IsOpen"/> value passed is null.</exception>
         /// <exception cref="ArgumentException">The <see cref="IsOpen"/> value passed is an empty string ("").</exception>
@@ -464,7 +461,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Gets or sets the logic level of the RX and TX signals. 
+        /// Gets or sets a value indicating whether the logic level of the RX and TX signals are inverted. 
         /// </summary>
         /// <exception cref="InvalidOperationException">Trying to set this property when the <see cref="SerialPort"/> is already opened and the driver doesn't support it.</exception>
         /// <exception cref="NotSupportedException">Trying to set this property on a target that does not support signal inversion.</exception>
@@ -658,7 +655,7 @@ namespace System.IO.Ports
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The offset or count parameters are outside a valid region of the buffer being
         /// passed. Either offset or count is less than zero.</exception>
-        /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
+        /// <exception cref="ArgumentException">Offset plus count is greater than the length of the buffer.</exception>
         /// <exception cref="TimeoutException">No bytes were available to read.</exception>
         [MethodImpl(MethodImplOptions.InternalCall)]
 #pragma warning disable S4200 // OK to make a direct call
@@ -716,7 +713,7 @@ namespace System.IO.Ports
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The offset or count parameters are outside a valid region of the buffer being
         /// passed. Either offset or count is less than zero.</exception>
-        /// <exception cref="ArgumentException">offset plus count is greater than the length of the buffer.</exception>
+        /// <exception cref="ArgumentException">Offset plus count is greater than the length of the buffer.</exception>
         /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
         [MethodImpl(MethodImplOptions.InternalCall)]
 #pragma warning disable S4200 // OK to make a direct call
@@ -742,7 +739,7 @@ namespace System.IO.Ports
         /// </summary>
         /// <param name="text">The string for output.</param>
         /// <exception cref="InvalidOperationException">The specified port is not open.</exception>
-        /// <exception cref="ArgumentNullException">text is null.</exception>
+        /// <exception cref="ArgumentNullException">Text is null.</exception>
         /// <exception cref="TimeoutException">The operation did not complete before the time-out period ended.</exception>
 #pragma warning disable S4200 // OK to make a direct call
         public void Write(string text) => NativeWriteString(text, false);
@@ -778,7 +775,7 @@ namespace System.IO.Ports
         /// Releases the unmanaged resources used by the <see cref="SerialPort"/> and optionally
         /// releases the managed resources.
         /// </summary>
-        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged
+        /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged
         /// resources.</param>
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
         /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
@@ -811,7 +808,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Dispose the Serial Port
+        /// Dispose the Serial Port.
         /// </summary>
         public void Dispose()
         {

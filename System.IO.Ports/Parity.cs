@@ -1,7 +1,5 @@
-﻿//
-// Copyright (c) .NET Foundation and Contributors
+﻿// Copyright (c) .NET Foundation and Contributors
 // See LICENSE file in the project root for full license information.
-//
 
 namespace System.IO.Ports
 {
@@ -23,6 +21,6 @@ namespace System.IO.Ports
         /// <summary>
         /// Sets the parity bit so that the count of bits set is an even number.
         /// </summary>
-        Even = 2,
-    };
+        Even = 2
+    }
 }
