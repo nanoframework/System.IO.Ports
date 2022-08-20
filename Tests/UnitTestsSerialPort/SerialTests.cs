@@ -23,9 +23,10 @@ namespace UnitTestsSerialPort
         [Setup]
         public void SetupComPorts()
         {
+            OutputHelper.WriteLine("Setting up tests for an ESP32...");
             try
             {
-                Debug.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
+                OutputHelper.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
                 Configuration.SetPinFunction(32, DeviceFunction.COM2_RX);
                 Configuration.SetPinFunction(33, DeviceFunction.COM2_TX);
                 Configuration.SetPinFunction(12, DeviceFunction.COM2_RTS);
@@ -36,22 +37,23 @@ namespace UnitTestsSerialPort
                 Configuration.SetPinFunction(27, DeviceFunction.COM3_RTS);
                 Configuration.SetPinFunction(14, DeviceFunction.COM3_CTS);
 
-                Debug.WriteLine("You will need to connect:");
-                Debug.WriteLine("  COM2 RX  <-> COM3 TX");
-                Debug.WriteLine("  COM2 TX  <-> COM3 RX");
-                Debug.WriteLine("  COM2 RTS <-> COM3 CTS");
-                Debug.WriteLine("  COM2 CTS <-> COM3 RTS");
+                OutputHelper.WriteLine("You will need to connect:");
+                OutputHelper.WriteLine("  COM2 RX  <-> COM3 TX");
+                OutputHelper.WriteLine("  COM2 TX  <-> COM3 RX");
+                OutputHelper.WriteLine("  COM2 RTS <-> COM3 CTS");
+                OutputHelper.WriteLine("  COM2 CTS <-> COM3 RTS");
                 _serOne = new SerialPort("COM2");
                 _serTwo = new SerialPort("COM3");
-                Debug.WriteLine("Devices created, trying to open them");
+                OutputHelper.WriteLine("SerialPorts created, trying to open them");
                 _serOne.Open();
-                Debug.WriteLine("Serial One COM2 opened");
+                OutputHelper.WriteLine("SerialPort One COM2 opened.");
                 _serTwo.Open();
-                Debug.WriteLine("Devices opened, will close them");
-                // Wait a bit just to make sure and close them again
+                OutputHelper.WriteLine("SerialPort Two COM3 opened.");
+                OutputHelper.WriteLine("All SerialPorts opened, will close them");
+                // Wait a bit just to make sure and close them all
                 Thread.Sleep(100);
-                _serOne.Close();
-                _serTwo.Close();
+                EnsurePortsClosed();
+                OutputHelper.WriteLine("SerialPorts Closed.");
             }
             catch
             {
@@ -63,10 +65,10 @@ namespace UnitTestsSerialPort
         public void GetPortNamesTest()
         {
             var ports = SerialPort.GetPortNames();
-            Debug.WriteLine("Available ports:");
+            OutputHelper.WriteLine("Available SerialPorts:");
             foreach (string port in ports)
             {
-                Debug.WriteLine($"  {port}");
+                OutputHelper.WriteLine($"  {port}");
             }
         }
 
