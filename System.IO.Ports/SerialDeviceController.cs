@@ -1,7 +1,5 @@
-﻿//
-// Copyright (c) .NET Foundation and Contributors
+﻿// Copyright (c) .NET Foundation and Contributors
 // See LICENSE file in the project root for full license information.
-//
 
 using System.Collections;
 
@@ -21,7 +19,7 @@ namespace System.IO.Ports
         private static ArrayList s_deviceCollection;
 
         /// <summary>
-        /// Device collection associated with this <see cref="SerialDeviceController"/>.
+        /// Gets or sets the device collection associated with this <see cref="SerialDeviceController"/>.
         /// </summary>
         /// <remarks>
         /// This collection is for internal use only.

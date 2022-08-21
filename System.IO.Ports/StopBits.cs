@@ -1,7 +1,5 @@
-﻿//
-// Copyright (c) .NET Foundation and Contributors
+﻿// Copyright (c) .NET Foundation and Contributors
 // See LICENSE file in the project root for full license information.
-//
 
 namespace System.IO.Ports
 {
@@ -24,5 +22,5 @@ namespace System.IO.Ports
         /// 1.5 stop bits are used.
         /// </summary>
         OnePointFive = 3
-    };
+    }
 }
