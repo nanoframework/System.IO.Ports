@@ -7,7 +7,8 @@ namespace System.IO.Ports
 {
     internal class SerialDataEvent : BaseEvent
     {
-        public int SerialDeviceIndex;
-        public SerialData Event;
+        public int SerialDeviceIndex { get; set; }
+
+        public SerialData Event { get; set; }
     }
 }

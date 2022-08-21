@@ -13,17 +13,19 @@ namespace System.IO.Ports
     {
         // default new line
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private const string _defaultNewLine = "\n";
+        private const string DefaultNewLine = "\n";
 
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private static readonly SerialDeviceEventListener s_eventListener = new();
-
-        private bool _disposed;
+        private static readonly SerialDeviceEventListener EventListener = new SerialDeviceEventListener();
 
         // this is used as the lock object 
         // a lock is required because multiple threads can access the SerialPort
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly object _syncLock = new();
+        private readonly object _syncLock = new object();
+
+        private readonly string _deviceId;
+
+        private bool _disposed;
 
         // flag to signal an open serial port
         private bool _opened;
@@ -39,8 +41,8 @@ namespace System.IO.Ports
         private int _dataBits;
         private Parity _parity;
         private SerialMode _mode = SerialMode.Normal;
-        private readonly string _deviceId;
-        internal int _portIndex;
+
+        internal int PortIndex { get; set; }
 
 #pragma warning disable S4487 // need this to be used in native code
         private char _watchChar;
@@ -50,6 +52,15 @@ namespace System.IO.Ports
         private SerialStream _stream;
         private string _newLine;
         private int _bufferSize = 256;
+
+        /// <summary>
+        /// Gets an array of serial port names for the current computer.
+        /// </summary>
+        /// <returns>An array of serial port names for the current computer.</returns>
+        public static string[] GetPortNames()
+        {
+            return GetDeviceSelector().Split(',');
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerialPort"/> class using the
@@ -71,9 +82,9 @@ namespace System.IO.Ports
         {
             // the UART name is an ASCII string with the COM port name in format 'COMn'
             // need to grab 'n' from the string and convert that to the integer value from the ASCII code (do this by subtracting 48 from the char value)
-            _portIndex = portName[3] - 48;
+            PortIndex = portName[3] - 48;
 
-            var device = FindDevice(_portIndex);
+            var device = FindDevice(PortIndex);
 
             if (device == null)
             {
@@ -82,7 +93,7 @@ namespace System.IO.Ports
                 _parity = parity;
                 _dataBits = dataBits;
                 _stopBits = stopBits;
-                _newLine = _defaultNewLine;
+                _newLine = DefaultNewLine;
 
                 // add serial device to collection
                 SerialDeviceController.DeviceCollection.Add(this);
@@ -112,7 +123,7 @@ namespace System.IO.Ports
                 NativeInit();
 
                 // add the serial device to the event listener in order to receive the callbacks from the native interrupts
-                s_eventListener.AddSerialDevice(this);
+                EventListener.AddSerialDevice(this);
 
                 _stream = new SerialStream(this);
 
@@ -138,21 +149,12 @@ namespace System.IO.Ports
                 _stream.Flush();
 
                 // remove the pin from the event listener
-                s_eventListener.RemoveSerialDevice(_portIndex);
+                EventListener.RemoveSerialDevice(PortIndex);
 
                 _stream.Dispose();
             }
 
             _opened = false;
-        }
-
-        /// <summary>
-        /// Gets an array of serial port names for the current computer.
-        /// </summary>
-        /// <returns>An array of serial port names for the current computer.</returns>
-        public static string[] GetPortNames()
-        {
-            return GetDeviceSelector().Split(',');
         }
 
         #region Properties
@@ -312,7 +314,7 @@ namespace System.IO.Ports
         /// Gets the port for communications.
         /// </summary>
         /// <remarks>
-        /// .NET nanoFramework doesn't support changing the port.
+        /// DotNET nanoFramework doesn't support changing the port.
         /// </remarks>
         public string PortName
         {
@@ -323,7 +325,7 @@ namespace System.IO.Ports
         }
 
         /// <summary>
-        /// Sets a character to watch for in the incoming data stream.
+        /// Gets or sets a character to watch for in the incoming data stream.
         /// </summary>
         /// <remarks>
         /// This property is specific to .NET nanoFramework. There is no equivalent in the System.IO.Ports API.
@@ -332,6 +334,11 @@ namespace System.IO.Ports
         /// </remarks>
         public char WatchChar
         {
+            get
+            {
+                return _watchChar;
+            }
+
             set
             {
                 _watchChar = value;
@@ -341,11 +348,6 @@ namespace System.IO.Ports
                 {
                     NativeSetWatchChar();
                 }
-            }
-
-            get
-            {
-                return _watchChar;
             }
         }
 
@@ -499,6 +501,11 @@ namespace System.IO.Ports
         /// </remarks>
         public int ReadBufferSize
         {
+            get
+            {
+                return _bufferSize;
+            }
+
             set
             {
                 if (value <= 0)
@@ -512,11 +519,6 @@ namespace System.IO.Ports
                 }
 
                 _bufferSize = value;
-            }
-
-            get
-            {
-                return _bufferSize;
             }
         }
 
@@ -539,6 +541,11 @@ namespace System.IO.Ports
         /// </remarks>
         public int WriteBufferSize
         {
+            get
+            {
+                return _bufferSize;
+            }
+
             set
             {
                 if (value <= 0)
@@ -552,11 +559,6 @@ namespace System.IO.Ports
                 }
 
                 _bufferSize = value;
-            }
-
-            get
-            {
-                return _bufferSize;
             }
         }
 
@@ -621,6 +623,19 @@ namespace System.IO.Ports
                     }
                 }
             }
+        }
+
+        internal static SerialPort FindDevice(int index)
+        {
+            for (int i = 0; i < SerialDeviceController.DeviceCollection.Count; i++)
+            {
+                if (((SerialPort)SerialDeviceController.DeviceCollection[i]).PortIndex == index)
+                {
+                    return (SerialPort)SerialDeviceController.DeviceCollection[i];
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -758,21 +773,8 @@ namespace System.IO.Ports
         public void WriteLine(string text) => NativeWriteString(text, true);
 #pragma warning restore S4200 // Native methods should be wrapped
 
-        internal static SerialPort FindDevice(int index)
-        {
-            for (int i = 0; i < SerialDeviceController.DeviceCollection.Count; i++)
-            {
-                if (((SerialPort)SerialDeviceController.DeviceCollection[i])._portIndex == index)
-                {
-                    return (SerialPort)SerialDeviceController.DeviceCollection[i];
-                }
-            }
-
-            return null;
-        }
-
         /// <summary>
-        /// Destructor.
+        /// Finalizes an instance of the <see cref="SerialPort" /> class.
         /// </summary>
         ~SerialPort()
         {
@@ -800,15 +802,16 @@ namespace System.IO.Ports
                     }
 
                     // find device
-                    var device = FindDevice(_portIndex);
+                    var device = FindDevice(PortIndex);
 
                     if (device != null)
                     {
                         // remove device from collection
                         SerialDeviceController.DeviceCollection.Remove(device);
+                        //// device.Dispose(); //TODO: is this required?
                     }
 
-                    NativeDispose();
+                    NativeDispose(); // TODO: should this have the port index???
                 }
 
                 _disposed = true;
@@ -834,6 +837,9 @@ namespace System.IO.Ports
         #region Native methods
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string GetDeviceSelector();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void NativeDispose();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -847,9 +853,6 @@ namespace System.IO.Ports
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void NativeWriteString(string text, bool addNewLine);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string GetDeviceSelector();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void NativeReceivedBytesThreshold(int value);
