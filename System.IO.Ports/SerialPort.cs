@@ -836,8 +836,10 @@ namespace System.IO.Ports
 
         #region Native methods
 
+#pragma warning disable SA1204 // StaticElementsMustAppearBeforeInstanceElements
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetDeviceSelector();
+#pragma warning restore SA1204 // StaticElementsMustAppearBeforeInstanceElements
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void NativeDispose();
