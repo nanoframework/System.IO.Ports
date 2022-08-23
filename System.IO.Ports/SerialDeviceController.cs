@@ -32,14 +32,14 @@ namespace System.IO.Ports
                 {
                     if (_syncLock == null)
                     {
-                        _syncLock = new();
+                        _syncLock = new object();
                     }
 
                     lock (_syncLock)
                     {
                         if (_deviceCollection == null)
                         {
-                            _deviceCollection = new();
+                            _deviceCollection = new ArrayList();
                         }
                     }
                 }
