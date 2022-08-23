@@ -16,7 +16,7 @@ namespace System.IO.Ports
         private const string _defaultNewLine = "\n";
 
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private static readonly SerialDeviceEventListener _eventListener = new SerialDeviceEventListener();
+        private static readonly SerialDeviceEventListener _eventListener = new();
 
         // this is used as the lock object 
         // a lock is required because multiple threads can access the SerialPort
@@ -837,11 +837,6 @@ namespace System.IO.Ports
         #region Native methods
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-#pragma warning disable SA1204 // StaticElementsMustAppearBeforeInstanceElements
-        internal static extern string GetDeviceSelector();
-#pragma warning restore SA1204 // StaticElementsMustAppearBeforeInstanceElements
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void NativeDispose();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -855,6 +850,11 @@ namespace System.IO.Ports
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void NativeWriteString(string text, bool addNewLine);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+#pragma warning disable SA1204 // StaticElementsMustAppearBeforeInstanceElements
+        internal static extern string GetDeviceSelector();
+#pragma warning restore SA1204 // StaticElementsMustAppearBeforeInstanceElements
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void NativeReceivedBytesThreshold(int value);
