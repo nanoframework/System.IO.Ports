@@ -13,15 +13,15 @@ namespace System.IO.Ports
     {
         // default new line
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private const string DefaultNewLine = "\n";
+        private const string _defaultNewLine = "\n";
 
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private static readonly SerialDeviceEventListener EventListener = new SerialDeviceEventListener();
+        private static readonly SerialDeviceEventListener _eventListener = new SerialDeviceEventListener();
 
         // this is used as the lock object 
         // a lock is required because multiple threads can access the SerialPort
         [System.Diagnostics.DebuggerBrowsable(Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly object _syncLock = new object();
+        private readonly object _syncLock = new();
 
         private readonly string _deviceId;
 
@@ -42,7 +42,7 @@ namespace System.IO.Ports
         private Parity _parity;
         private SerialMode _mode = SerialMode.Normal;
 
-        internal int PortIndex { get; set; }
+        internal int _portIndex { get; set; }
 
 #pragma warning disable S4487 // need this to be used in native code
         private char _watchChar;
@@ -82,9 +82,9 @@ namespace System.IO.Ports
         {
             // the UART name is an ASCII string with the COM port name in format 'COMn'
             // need to grab 'n' from the string and convert that to the integer value from the ASCII code (do this by subtracting 48 from the char value)
-            PortIndex = portName[3] - 48;
+            _portIndex = portName[3] - 48;
 
-            var device = FindDevice(PortIndex);
+            var device = FindDevice(_portIndex);
 
             if (device == null)
             {
@@ -93,7 +93,7 @@ namespace System.IO.Ports
                 _parity = parity;
                 _dataBits = dataBits;
                 _stopBits = stopBits;
-                _newLine = DefaultNewLine;
+                _newLine = _defaultNewLine;
 
                 // add serial device to collection
                 SerialDeviceController.DeviceCollection.Add(this);
@@ -123,7 +123,7 @@ namespace System.IO.Ports
                 NativeInit();
 
                 // add the serial device to the event listener in order to receive the callbacks from the native interrupts
-                EventListener.AddSerialDevice(this);
+                _eventListener.AddSerialDevice(this);
 
                 _stream = new SerialStream(this);
 
@@ -149,7 +149,7 @@ namespace System.IO.Ports
                 _stream.Flush();
 
                 // remove the pin from the event listener
-                EventListener.RemoveSerialDevice(PortIndex);
+                _eventListener.RemoveSerialDevice(_portIndex);
 
                 _stream.Dispose();
             }
@@ -314,7 +314,7 @@ namespace System.IO.Ports
         /// Gets the port for communications.
         /// </summary>
         /// <remarks>
-        /// DotNET nanoFramework doesn't support changing the port.
+        /// .NET nanoFramework doesn't support changing the port.
         /// </remarks>
         public string PortName
         {
@@ -629,7 +629,7 @@ namespace System.IO.Ports
         {
             for (int i = 0; i < SerialDeviceController.DeviceCollection.Count; i++)
             {
-                if (((SerialPort)SerialDeviceController.DeviceCollection[i]).PortIndex == index)
+                if (((SerialPort)SerialDeviceController.DeviceCollection[i])._portIndex == index)
                 {
                     return (SerialPort)SerialDeviceController.DeviceCollection[i];
                 }
@@ -802,7 +802,7 @@ namespace System.IO.Ports
                     }
 
                     // find device
-                    var device = FindDevice(PortIndex);
+                    var device = FindDevice(_portIndex);
 
                     if (device != null)
                     {
@@ -811,7 +811,7 @@ namespace System.IO.Ports
                         //// device.Dispose(); //TODO: is this required?
                     }
 
-                    NativeDispose(); // TODO: should this have the port index???
+                    NativeDispose();
                 }
 
                 _disposed = true;

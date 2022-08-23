@@ -9,7 +9,7 @@ namespace System.IO.Ports
     internal class SerialDeviceEventListener : IEventProcessor, IEventListener
     {
         // Map of serial device numbers to SerialDevice objects.
-        private readonly ArrayList _serialDevicesMap = new ArrayList();
+        private readonly ArrayList _serialDevicesMap = new();
 
         public SerialDeviceEventListener()
         {
@@ -76,7 +76,7 @@ namespace System.IO.Ports
         {
             for (int i = 0; i < _serialDevicesMap.Count; i++)
             {
-                if (((SerialPort)_serialDevicesMap[i]).PortIndex == number)
+                if (((SerialPort)_serialDevicesMap[i])._portIndex == number)
                 {
                     return (SerialPort)_serialDevicesMap[i];
                 }
