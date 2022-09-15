@@ -2,7 +2,32 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.2...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.6...HEAD)
+
+**Implemented enhancements:**
+
+- Add Destructor to SerialPort class [\#102](https://github.com/nanoframework/System.IO.Ports/pull/102)
+
+**Documentation and other chores:**
+
+- Update 2 NuGet dependencies [\#107](https://github.com/nanoframework/System.IO.Ports/pull/107)
+- Update 1 NuGet dependencies [\#106](https://github.com/nanoframework/System.IO.Ports/pull/106)
+- Update 1 NuGet dependencies [\#105](https://github.com/nanoframework/System.IO.Ports/pull/105)
+- Update 1 NuGet dependencies [\#104](https://github.com/nanoframework/System.IO.Ports/pull/104)
+- Fix SerialPort Dispose warning [\#99](https://github.com/nanoframework/System.IO.Ports/pull/99)
+- Update 2 NuGet dependencies [\#98](https://github.com/nanoframework/System.IO.Ports/pull/98)
+
+## [v1.1.6](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.6) (2022-08-04)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.4...v1.1.6)
+
+**Documentation and other chores:**
+
+- Update 2 NuGet dependencies [\#97](https://github.com/nanoframework/System.IO.Ports/pull/97)
+
+## [v1.1.4](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.4) (2022-08-03)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.2...v1.1.4)
 
 **Documentation and other chores:**
 
