@@ -1,5 +1,17 @@
 # Changelog
 
+## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.22...HEAD)
+
+**Implemented enhancements:**
+
+- Lock to serial devices array in event listener is now using SyncRoot [\#109](https://github.com/nanoframework/System.IO.Ports/pull/109)
+
+## [v1.1.22](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.22) (2022-09-15)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.18...v1.1.22)
+
 ## [v1.1.18](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.18) (2022-09-15)
 
 [Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.16...v1.1.18)
