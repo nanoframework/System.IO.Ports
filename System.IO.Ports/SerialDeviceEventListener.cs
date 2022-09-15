@@ -37,7 +37,7 @@ namespace System.IO.Ports
             var serialDataEvent = (SerialDataEvent)ev;
             SerialPort device = null;
 
-            lock (_serialDevicesMap)
+            lock (_serialDevicesMap.SyncRoot)
             {
                 device = FindSerialDevice(serialDataEvent.SerialDeviceIndex);
             }
@@ -53,7 +53,7 @@ namespace System.IO.Ports
 
         public void AddSerialDevice(SerialPort device)
         {
-            lock (_serialDevicesMap)
+            lock (_serialDevicesMap.SyncRoot)
             {
                 _serialDevicesMap.Add(device);
             }
@@ -61,7 +61,7 @@ namespace System.IO.Ports
 
         public void RemoveSerialDevice(int index)
         {
-            lock (_serialDevicesMap)
+            lock (_serialDevicesMap.SyncRoot)
             {
                 var device = FindSerialDevice(index);
 
