@@ -782,6 +782,14 @@ namespace System.IO.Ports
         }
 
         /// <summary>
+        /// Destructor.
+        /// </summary>
+        ~SerialPort()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
         /// Releases the unmanaged resources used by the <see cref="SerialPort"/> and optionally
         /// releases the managed resources.
         /// </summary>
