@@ -2,7 +2,69 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.2...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.29...HEAD)
+
+**Documentation and other chores:**
+
+- Update 1 NuGet dependencies [\#112](https://github.com/nanoframework/System.IO.Ports/pull/112)
+
+## [v1.1.29](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.29) (2022-10-08)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.25...v1.1.29)
+
+**Documentation and other chores:**
+
+- Update 1 NuGet dependencies [\#111](https://github.com/nanoframework/System.IO.Ports/pull/111)
+- Update 1 NuGet dependencies [\#110](https://github.com/nanoframework/System.IO.Ports/pull/110)
+
+## [v1.1.25](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.25) (2022-09-15)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.22...v1.1.25)
+
+**Implemented enhancements:**
+
+- Lock to serial devices array in event listener is now using SyncRoot [\#109](https://github.com/nanoframework/System.IO.Ports/pull/109)
+
+## [v1.1.22](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.22) (2022-09-15)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.18...v1.1.22)
+
+## [v1.1.18](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.18) (2022-09-15)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.16...v1.1.18)
+
+**Documentation and other chores:**
+
+- Update 1 NuGet dependencies [\#108](https://github.com/nanoframework/System.IO.Ports/pull/108)
+
+## [v1.1.16](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.16) (2022-09-15)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.6...v1.1.16)
+
+**Implemented enhancements:**
+
+- Add Destructor to SerialPort class [\#102](https://github.com/nanoframework/System.IO.Ports/pull/102)
+
+**Documentation and other chores:**
+
+- Update 2 NuGet dependencies [\#107](https://github.com/nanoframework/System.IO.Ports/pull/107)
+- Update 1 NuGet dependencies [\#106](https://github.com/nanoframework/System.IO.Ports/pull/106)
+- Update 1 NuGet dependencies [\#105](https://github.com/nanoframework/System.IO.Ports/pull/105)
+- Update 1 NuGet dependencies [\#104](https://github.com/nanoframework/System.IO.Ports/pull/104)
+- Fix SerialPort Dispose warning [\#99](https://github.com/nanoframework/System.IO.Ports/pull/99)
+- Update 2 NuGet dependencies [\#98](https://github.com/nanoframework/System.IO.Ports/pull/98)
+
+## [v1.1.6](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.6) (2022-08-04)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.4...v1.1.6)
+
+**Documentation and other chores:**
+
+- Update 2 NuGet dependencies [\#97](https://github.com/nanoframework/System.IO.Ports/pull/97)
+
+## [v1.1.4](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.4) (2022-08-03)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.2...v1.1.4)
 
 **Documentation and other chores:**
 
