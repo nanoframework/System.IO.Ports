@@ -390,7 +390,7 @@ namespace System.IO.Ports
 
             set
             {
-                if (value is < 0 and value is not Timeout.Infinite)
+                if (value < 0 && value != Timeout.Infinite)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -413,7 +413,7 @@ namespace System.IO.Ports
 
             set
             {
-                if (value is < 0 and value is not Timeout.Infinite)
+                if (value < 0 && value != Timeout.Infinite)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
