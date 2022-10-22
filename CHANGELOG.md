@@ -2,7 +2,19 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.29...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.31...HEAD)
+
+**Fixed bugs:**
+
+- Fix implementation of timeout properties [\#113](https://github.com/nanoframework/System.IO.Ports/pull/113)
+
+**Documentation and other chores:**
+
+- Update 1 NuGet dependencies [\#114](https://github.com/nanoframework/System.IO.Ports/pull/114)
+
+## [v1.1.31](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.31) (2022-10-09)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.29...v1.1.31)
 
 **Documentation and other chores:**
 
