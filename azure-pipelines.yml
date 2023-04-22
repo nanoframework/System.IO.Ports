@@ -53,6 +53,10 @@ steps:
 # update dependents
 - template: azure-pipelines-templates/update-dependents.yml@templates  
   parameters:
+    ${{ if eq(variables['UPDATE_DEPENDENTS'], 'true') }}:
+      waitBeforeUpdate: false
+    ${{ else }}:
+      waitBeforeUpdate: true
     repositoriesToUpdate: |
       nanoFramework.Logging
 

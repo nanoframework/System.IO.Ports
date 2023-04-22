@@ -385,14 +385,14 @@ namespace System.IO.Ports
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
         /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to <see cref="Timeout"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to <see cref="Timeout.Infinite"/>.</exception>
         public int ReadTimeout
         {
             get => _readTimeout;
 
             set
             {
-                if (value <= 0)
+                if (value < 0 && value != Timeout.Infinite)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -408,15 +408,14 @@ namespace System.IO.Ports
         /// <exception cref="IOException">The port is in an invalid state. -or- An attempt to set the state of the underlying
         /// port failed. For example, the parameters passed from this <see cref="SerialPort"/>
         /// object were invalid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <see cref="WriteTimeout"/> value is less than zero and not equal
-        /// to <see cref="Timeout"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The read time-out value is less than zero and not equal to <see cref="Timeout.Infinite"/>.</exception>
         public int WriteTimeout
         {
             get => _writeTimeout;
 
             set
             {
-                if ((value < 0) && (value != Timeout.Infinite))
+                if (value < 0 && value != Timeout.Infinite)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
