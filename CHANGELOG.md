@@ -2,7 +2,26 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/System.IO.Ports/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.57...HEAD)
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.60...HEAD)
+
+**Documentation and other chores:**
+
+- Update 4 NuGet dependencies [\#143](https://github.com/nanoframework/System.IO.Ports/pull/143)
+- Update 1 NuGet dependencies [\#142](https://github.com/nanoframework/System.IO.Ports/pull/142)
+- Update 1 NuGet dependencies [\#141](https://github.com/nanoframework/System.IO.Ports/pull/141)
+- Update 2 NuGet dependencies [\#140](https://github.com/nanoframework/System.IO.Ports/pull/140)
+- Update 1 NuGet dependencies [\#139](https://github.com/nanoframework/System.IO.Ports/pull/139)
+- Update 1 NuGet dependencies [\#138](https://github.com/nanoframework/System.IO.Ports/pull/138)
+- Update 1 NuGet dependencies [\#137](https://github.com/nanoframework/System.IO.Ports/pull/137)
+- Update 1 NuGet dependencies [\#136](https://github.com/nanoframework/System.IO.Ports/pull/136)
+- Update 1 NuGet dependencies [\#135](https://github.com/nanoframework/System.IO.Ports/pull/135)
+- Update 1 NuGet dependencies [\#134](https://github.com/nanoframework/System.IO.Ports/pull/134)
+- Update 1 NuGet dependencies [\#133](https://github.com/nanoframework/System.IO.Ports/pull/133)
+- Update 1 NuGet dependencies [\#132](https://github.com/nanoframework/System.IO.Ports/pull/132)
+
+## [v1.1.60](https://github.com/nanoframework/System.IO.Ports/tree/v1.1.60) (2022-12-28)
+
+[Full Changelog](https://github.com/nanoframework/System.IO.Ports/compare/v1.1.57...v1.1.60)
 
 **Documentation and other chores:**
 
