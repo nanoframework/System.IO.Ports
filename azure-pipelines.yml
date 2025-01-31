@@ -33,6 +33,12 @@ resources:
       name: nanoframework/nf-tools
       endpoint: nanoframework
 
+variables:
+  - name: DOTNET_NOLOGO
+    value: true  
+  - name: nugetPackageName
+    value: 'nanoFramework.System.IO.Ports'
+    
 jobs:
 
 ##############################
@@ -50,16 +56,12 @@ jobs:
 
   variables:
     - group: sign-client-credentials
-    - name: DOTNET_NOLOGO
-      value: true  
     - name: buildPlatform
       value: 'Any CPU'  
     - name: buildConfiguration
       value: 'Release'
     - name: solution
       value: 'nanoFramework.System.IO.Ports.sln'
-    - name: nugetPackageName
-      value: 'nanoFramework.System.IO.Ports'
 
   steps:
 
@@ -87,9 +89,6 @@ jobs:
   pool:
     vmImage: 'windows-latest'
 
-  variables:
-    DOTNET_NOLOGO: true
-
   steps:
   # need this here in order to persist GitHub credentials 
   - checkout: self
@@ -98,7 +97,7 @@ jobs:
   # update dependents
   - template: azure-pipelines-templates/update-dependents.yml@templates  
     parameters:
-      waitBeforeUpdate: ${{ eq(variables['UPDATE_DEPENDENTS'], 'true') }}
+      packageName: '$(nugetPackageName)'
       repositoriesToUpdate: |
         nanoFramework.Logging
 
