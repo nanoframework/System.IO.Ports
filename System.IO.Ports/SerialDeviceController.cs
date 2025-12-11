@@ -16,7 +16,7 @@ namespace System.IO.Ports
         private static object _syncLock;
 
         // backing field for DeviceCollection
-        private static ArrayList s_deviceCollection;
+        private static ArrayList _deviceCollection;
 
         /// <summary>
         /// Gets or sets the device collection associated with this <see cref="SerialDeviceController"/>.
@@ -28,7 +28,7 @@ namespace System.IO.Ports
         {
             get
             {
-                if (s_deviceCollection == null)
+                if (_deviceCollection == null)
                 {
                     if (_syncLock == null)
                     {
@@ -37,19 +37,19 @@ namespace System.IO.Ports
 
                     lock (_syncLock)
                     {
-                        if (s_deviceCollection == null)
+                        if (_deviceCollection == null)
                         {
-                            s_deviceCollection = new ArrayList();
+                            _deviceCollection = new ArrayList();
                         }
                     }
                 }
 
-                return s_deviceCollection;
+                return _deviceCollection;
             }
 
             set
             {
-                s_deviceCollection = value;
+                _deviceCollection = value;
             }
         }
     }

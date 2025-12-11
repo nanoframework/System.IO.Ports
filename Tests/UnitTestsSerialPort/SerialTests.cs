@@ -91,7 +91,7 @@ namespace UnitTestsSerialPort
             // Assert
             for (int i = 0; i < toSend.Length; i++)
             {
-                Assert.Equal(toSend[i], toReceive[i]);
+                Assert.AreEqual(toSend[i], toReceive[i]);
             }
         }
 
@@ -109,7 +109,7 @@ namespace UnitTestsSerialPort
             _serOne.Write(toSend);
             string toReceive = _serTwo.ReadLine();
             // Assert
-            Assert.Equal(toSend, toReceive + "\\r" + _serOne.NewLine);
+            Assert.AreEqual(toSend, toReceive + "\\r" + _serOne.NewLine);
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@ namespace UnitTestsSerialPort
             _serOne.WriteLine(toSend);
             string toReceive = _serTwo.ReadLine();
             // Assert
-            Assert.Equal(toSend + _serOne.NewLine, toReceive);
+            Assert.AreEqual(toSend + _serOne.NewLine, toReceive);
         }
 
         [TestMethod]
@@ -143,11 +143,11 @@ namespace UnitTestsSerialPort
             _serOne.WriteLine(toSend);
             string toReceive = _serTwo.ReadLine();
             // Assert
-            Assert.Equal($"Hi, this is a simple test with string{_serOne.NewLine}", toReceive);
+            Assert.AreEqual($"Hi, this is a simple test with string{_serOne.NewLine}", toReceive);
             toReceive = _serTwo.ReadLine();
-            Assert.Equal($"And with a second line{_serOne.NewLine}", toReceive);
+            Assert.AreEqual($"And with a second line{_serOne.NewLine}", toReceive);
             toReceive = _serTwo.ReadLine();
-            Assert.Equal($"Only line by line should be read{_serOne.NewLine}", toReceive);
+            Assert.AreEqual($"Only line by line should be read{_serOne.NewLine}", toReceive);
         }
 
         [TestMethod]
@@ -164,17 +164,17 @@ namespace UnitTestsSerialPort
             // Wait a bit to have data sent
             Thread.Sleep(100);
             // Assert
-            Assert.Equal(enc, _serTwo.BytesToRead);
+            Assert.AreEqual(enc, _serTwo.BytesToRead);
             // Read remaining
             string sent = _serTwo.ReadExisting();
-            Assert.Equal(toSend, sent);
+            Assert.AreEqual(toSend, sent);
         }
 
         [TestMethod]
         public void CheckReadLineWithoutAnything()
         {
             long dtOrigine = DateTime.UtcNow.Ticks;
-            Assert.Throws(typeof(TimeoutException), () =>
+            Assert.ThrowsException(typeof(TimeoutException), () =>
             {
                 // Arrange
                 EnsurePortsOpen();
@@ -185,14 +185,15 @@ namespace UnitTestsSerialPort
                 var nothingToRead = _serTwo.ReadLine();
                 // Assert
             });
+
             long dtTimeout = DateTime.UtcNow.Ticks;
-            Assert.True(dtTimeout >= dtOrigine + _serTwo.ReadTimeout * TimeSpan.TicksPerMillisecond);
+            Assert.IsTrue(dtTimeout >= dtOrigine + _serTwo.ReadTimeout * TimeSpan.TicksPerMillisecond);
         }
 
         [TestMethod]
         public void CheckReadTimeoutTest()
         {
-            Assert.Throws(typeof(TimeoutException), () =>
+            Assert.ThrowsException(typeof(TimeoutException), () =>
             {
                 // Arrange
                 EnsurePortsOpen();
@@ -225,7 +226,7 @@ namespace UnitTestsSerialPort
             Thread.Sleep(100);
             toRead = (byte)_serTwo.ReadByte();
             // Assert
-            Assert.Equal(toWrite[1], toRead);
+            Assert.AreEqual(toWrite[1], toRead);
         }
 
         [TestMethod]
@@ -248,19 +249,19 @@ namespace UnitTestsSerialPort
             // Clean
             EnsurePortEmpty(_serTwo);
             // Assert
-            Assert.Equal(lotsOfBytes.Length, numBytes);
+            Assert.AreEqual(lotsOfBytes.Length, numBytes);
         }
 
         [TestMethod]
         public void TryReadWriteWhileClosed()
         {
             EnsurePortsClosed();
-            Assert.Throws(typeof(InvalidOperationException), () =>
+            Assert.ThrowsException(typeof(InvalidOperationException), () =>
             {
                 _serOne.Write("Something");
             });
 
-            Assert.Throws(typeof(InvalidOperationException), () =>
+            Assert.ThrowsException(typeof(InvalidOperationException), () =>
             {
                 byte[] something = new byte[5];
                 _serOne.Read(something, 0, something.Length);
@@ -312,7 +313,7 @@ namespace UnitTestsSerialPort
             // Assert
             for (int i = 0; i < toSend.Length; i++)
             {
-                Assert.Equal(toSend[i], toReceive[i]);
+                Assert.AreEqual(toSend[i], toReceive[i]);
             }
         }
 
@@ -340,8 +341,8 @@ namespace UnitTestsSerialPort
         {
             var ser = (SerialPort)sender;
             Debug.WriteLine($"Event fired, number of bytes ready to read: {ser.BytesToRead}");
-            Assert.Equal(8, ser.BytesToRead);
-            Assert.True(e.EventType == SerialData.Chars);
+            Assert.AreEqual(8, ser.BytesToRead);
+            Assert.IsTrue(e.EventType == SerialData.Chars);
         }
 
         [TestMethod]
@@ -368,7 +369,7 @@ namespace UnitTestsSerialPort
         {
             var ser = (SerialPort)sender;
             Debug.WriteLine($"Event fired, number of bytes ready to read: {ser.BytesToRead}");
-            Assert.True(e.EventType == SerialData.WatchChar);
+            Assert.IsTrue(e.EventType == SerialData.WatchChar);
         }
 
         private void SendAndReceiveBasic()
@@ -385,7 +386,7 @@ namespace UnitTestsSerialPort
             // Assert
             for (int i = 0; i < toSend.Length; i++)
             {
-                Assert.Equal(toSend[i], toReceive[i]);
+                Assert.AreEqual(toSend[i], toReceive[i]);
             }
         }
 

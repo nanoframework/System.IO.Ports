@@ -6,7 +6,6 @@ Project("{11A8DD76-328B-46DF-9F39-F559912D0360}") = "System.IO.Ports", "System.I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81AEA0D7-86C3-45D6-94C7-3E704825AB20}"
 	ProjectSection(SolutionItems) = preProject
-		nanoFramework.System.IO.Ports.DELIVERABLES.nuspec = nanoFramework.System.IO.Ports.DELIVERABLES.nuspec
 		nanoFramework.System.IO.Ports.nuspec = nanoFramework.System.IO.Ports.nuspec
 		NuGet.Config = NuGet.Config
 		version.json = version.json
