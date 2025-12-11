@@ -34,7 +34,7 @@ namespace System.IO.Ports
             return _serial.Read(buffer, offset, count);
         }
 
-        public override int Read(SpanByte buffer)
+        public override int Read(Span<byte> buffer)
         {
             throw new NotImplementedException();
         }
