@@ -54,5 +54,11 @@ namespace System.IO.Ports
         {
             _serial.Write(buffer, offset, count);
         }
+        
+        /// <inheritdoc/>
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

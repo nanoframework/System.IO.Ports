@@ -4,21 +4,21 @@
     ".NETnanoFramework,Version=v1.0": {
       "nanoFramework.CoreLibrary": {
         "type": "Direct",
-        "requested": "[2.0.0-preview.29, 2.0.0-preview.29]",
-        "resolved": "2.0.0-preview.29",
-        "contentHash": "7NDp9Sda9FTFBDN//X34r23rJBHUkCvyGvrFh9s5B8H2nMoet4J0OlEOiZRUsEPBXlsNpZFVp+Cd6OSjnLSg5A=="
+        "requested": "[2.0.0-preview.30, 2.0.0-preview.30]",
+        "resolved": "2.0.0-preview.30",
+        "contentHash": "Fz+5L0yOpe0ZoBpVRqH8G8Dr18OoXVE6sKertR/bPuWyOJiO42enlarudfv91/gpJXFkQGNCCdXpHWpoc77jyg=="
       },
       "nanoFramework.Runtime.Events": {
         "type": "Direct",
-        "requested": "[2.0.0-preview.1, 2.0.0-preview.1]",
-        "resolved": "2.0.0-preview.1",
-        "contentHash": "MrhfHe/2pDKkXe79+L/tX4rg+lV6Z+HkcJBbjUQx2oHOwYgh74kEli8I7KnOv00rwaIPuj2BeYeW6jh6kxOZXg=="
+        "requested": "[2.0.0-preview.2, 2.0.0-preview.2]",
+        "resolved": "2.0.0-preview.2",
+        "contentHash": "2R3UXwVl5UqO9vMtcfUbffQd2bbMTwqHqYgzRKT5Cwh87ZhkCcN2vWDBnFEBdXb92PNocEz/SpeocqqkeYulIw=="
       },
       "nanoFramework.System.IO.Streams": {
         "type": "Direct",
-        "requested": "[2.0.0-preview.1, 2.0.0-preview.1]",
-        "resolved": "2.0.0-preview.1",
-        "contentHash": "JCLDrlrh5hbmL6nlYIY+eWGvyJwN7NgU6lHJfxQ8IhDLw/B08k+iAo/KLXLB2n1bAb4b0zhGeLlJ0P1xZUyDeg=="
+        "requested": "[2.0.0-preview.5, 2.0.0-preview.5]",
+        "resolved": "2.0.0-preview.5",
+        "contentHash": "wOfCmHN/IEtqHGDkEPHlxj/svbAXJfbecX/GZ/30v/151yqvO89qatVwAMkRT+H33FUe4q+gTYF90dzV/Kpzzw=="
       },
       "nanoFramework.System.Text": {
         "type": "Direct",
@@ -28,9 +28,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.7.115, 3.7.115]",
-        "resolved": "3.7.115",
-        "contentHash": "EpXamaAdRfG/BMxGgvZlTM0npRnkmXUjAj8OdNKd17t4oN+2nvjdv/KnFmzOOMDqvlwB49UCwtOHJrAQTfUBtQ=="
+        "requested": "[3.9.50, 3.9.50]",
+        "resolved": "3.9.50",
+        "contentHash": "HtOgGF6jZ+WYbXnCUCYPT8Y2d6mIJo9ozjK/FINTRsXdm4Zgv9GehUMa7EFoGQkqrMcDJNOIDwCmENnvXg4UbA=="
       },
       "StyleCop.MSBuild": {
         "type": "Direct",
