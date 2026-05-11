@@ -22,7 +22,7 @@ This package requires a target with System.IO.Ports v$nativeVersion$ (checksum $
       <group targetFramework=".NETnanoFramework1.0">
         <dependency id="nanoFramework.CoreLibrary" version="2.0.0-preview.49" />
         <dependency id="nanoFramework.Runtime.Events" version="2.0.0-preview.12" />
-        <dependency id="nanoFramework.System.IO.Streams" version="2.0.0-preview.15" />
+        <dependency id="nanoFramework.System.IO.Streams" version="2.0.0-preview.18" />
       </group>
     </dependencies>
   </metadata>
