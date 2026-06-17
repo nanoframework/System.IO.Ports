@@ -1,16 +1,16 @@
-﻿//
-// Copyright (c) .NET Foundation and Contributors
+﻿// Copyright (c) .NET Foundation and Contributors
 // See LICENSE file in the project root for full license information.
-//
 
-using nanoFramework.Hardware.Esp32;
-using nanoFramework.TestFramework;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
+using nanoFramework.TestFramework;
+
+// The following dependenies are target or platform dependent (comment out if required and remove nuget).
+using nanoFramework.Hardware.Esp32;
 
 namespace UnitTestsSerialPort
 {
@@ -20,8 +20,9 @@ namespace UnitTestsSerialPort
         static SerialPort _serOne;
         static SerialPort _serTwo;
 
+        // The default test setup is for an ESP32
         [Setup]
-        public void SetupComPorts()
+        public void SetupComPorts_ESP32()
         {
             OutputHelper.WriteLine("Setting up tests for an ESP32...");
             try
@@ -40,8 +41,8 @@ namespace UnitTestsSerialPort
                 OutputHelper.WriteLine("You will need to connect:");
                 OutputHelper.WriteLine("  COM2 RX  <-> COM3 TX");
                 OutputHelper.WriteLine("  COM2 TX  <-> COM3 RX");
-                OutputHelper.WriteLine("  COM2 RTS <-> COM3 CTS");
-                OutputHelper.WriteLine("  COM2 CTS <-> COM3 RTS");
+                OutputHelper.WriteLine("  COM2 RTS <-> COM3 CTS"); // TODO: Optional?!
+                OutputHelper.WriteLine("  COM2 CTS <-> COM3 RTS"); // TODO: Optional?!
                 _serOne = new SerialPort("COM2");
                 _serTwo = new SerialPort("COM3");
                 OutputHelper.WriteLine("SerialPorts created, trying to open them");
@@ -61,8 +62,43 @@ namespace UnitTestsSerialPort
             }
         }
 
+        // This commented out method is provided as an example of how to "setup" a different target board.
+        // in this case, an STM32F769I.
+        // When uncommened, other setup methods (such as `SetupComPorts_ESP32()`)  should be removed.
+        //[Setup]
+        //public void SetupComPorts_ChibOs_STM32F769I_Disco()
+        //{
+        //    OutputHelper.WriteLine("Setting up tests for an STM32F769I...");
+        //    try
+        //    {
+        //        Debug.WriteLine("Please adjust for your own usage. If you need another hardware, please add the proper nuget and adjust as well");
+
+        //        OutputHelper.WriteLine("You will need to connect:");
+        //        OutputHelper.WriteLine("  COM5 (PD2) RX  <-> COM6 (PC6) TX");
+        //        OutputHelper.WriteLine("  COM5 (PC12) TX  <-> COM6 (PC7) RX");
+        //        // OutputHelper.WriteLine("  COM5 RTS <-> COM6 CTS");
+        //        // OutputHelper.WriteLine("  COM5 CTS <-> COM6 RTS");
+        //        _serOne = new SerialPort("COM5");
+        //        _serTwo = new SerialPort("COM6");
+        //        OutputHelper.WriteLine("SerialPorts created, trying to open them");
+        //        _serOne.Open();
+        //        OutputHelper.WriteLine("SerialPort One COM5 opened");
+        //        _serTwo.Open();
+        //        OutputHelper.WriteLine("SerialPort Two COM6 opened");
+        //        OutputHelper.WriteLine("SarialPorts opened, will close them");
+        //        // Wait a bit just to make sure and close them all
+        //        Thread.Sleep(100);
+        //        EnsurePortsClosed();
+        //        OutputHelper.WriteLine("SerialPorts Closed.");
+        //    }
+        //    catch
+        //    {
+        //        Assert.SkipTest("Serial Ports not supported in this platform or not properly configured");
+        //    }
+        //}
+
         [TestMethod]
-        public void GetPortNamesTest()
+        public void GetAllAvailableSerialPortNames()
         {
             var ports = SerialPort.GetPortNames();
             OutputHelper.WriteLine("Available SerialPorts:");
@@ -73,7 +109,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void BasicReadWriteTests()
+        public void WriteAndReadFourBytes()
         {
             // Arrange
             EnsurePortsOpen();
@@ -113,7 +149,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void WriteAndReadStringTests()
+        public void WriteAndReadSimpleAsciiString_37Chars()
         {
             // Arrange
             EnsurePortsOpen();
@@ -130,7 +166,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void ReadMultipleLinesTests()
+        public void WriteAndReadMultipleLineAsciiString()
         {
             // Arrange
             EnsurePortsOpen();
@@ -151,7 +187,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void CheckReadByteSize()
+        public void CheckReadByteSizeUtf8String()
         {
             // Arrange
             EnsurePortsOpen();
@@ -190,7 +226,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void CheckReadTimeoutTest()
+        public void CheckReadTimeout()
         {
             Assert.Throws(typeof(TimeoutException), () =>
             {
@@ -206,7 +242,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void ReadByteWriteByteTests()
+        public void WriteThreeBytesReadSingleByte()
         {
             // Arrange
             EnsurePortsOpen();
@@ -229,7 +265,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void CheckBytesAvailableTest()
+        public void CheckBytesAreAvailable()
         {
             // Arrange
             EnsurePortsOpen();
@@ -268,7 +304,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void AdjustBaudRateTests()
+        public void AdjustBaudRateTo115200()
         {
             // Arrange
             _serOne.BaudRate = 115200;
@@ -278,7 +314,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void AdjustHandshakeTests()
+        public void AdjustHandshakeRTS()
         {
             // Arrange
             _serOne.Handshake = Handshake.RequestToSend;
@@ -291,7 +327,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestStreams()
+        public void StreamsCanWriteRead()
         {
             // Arrange
             EnsurePortsOpen();
@@ -317,7 +353,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestEvents()
+        public void DataReceivedEventsAreGenerated()
         {
             // Arrange
             EnsurePortsOpen();
@@ -345,7 +381,7 @@ namespace UnitTestsSerialPort
         }
 
         [TestMethod]
-        public void TestWatchCharEvents()
+        public void WatchCharEventsAreGenerated()
         {
             // Arrange
             EnsurePortsOpen();
@@ -390,7 +426,7 @@ namespace UnitTestsSerialPort
         }
 
         [Cleanup]
-        public void CleanPorts()
+        public void DisposeSerialPorts()
         {
             EnsurePortsClosed();
             _serOne.Dispose();
