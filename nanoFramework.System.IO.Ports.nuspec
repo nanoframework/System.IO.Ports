@@ -20,9 +20,9 @@ This package requires a target with System.IO.Ports native contract hash $native
     <tags>nanoFramework C# csharp netmf netnf System.IO.Ports nfnc-$nativeContractHash$</tags>
     <dependencies>
       <group targetFramework=".NETnanoFramework1.0">
-        <dependency id="nanoFramework.CoreLibrary" version="2.0.0-preview.63" />
+        <dependency id="nanoFramework.CoreLibrary" version="2.0.0-preview.125" />
         <dependency id="nanoFramework.Runtime.Events" version="2.0.0-preview.19" />
-        <dependency id="nanoFramework.System.IO.Streams" version="2.0.0-preview.29" />
+        <dependency id="nanoFramework.System.IO.Streams" version="2.0.0-preview.33" />
       </group>
     </dependencies>
   </metadata>
